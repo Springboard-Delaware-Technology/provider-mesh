@@ -1,0 +1,55 @@
+Add the two attached Provider Mesh governance documents to the current Provider Mesh repository.
+
+The documents have different functions:
+
+1. `PRODUCT_CONSTITUTION_v1.0_APPROVED.md` is the approved constitutional text.
+2. `PRODUCT_CONSTITUTION_v1.0_APPROVAL_RECORD.md` is its approval and audit record.
+
+Complete the following steps:
+
+1. Inspect the current branch, remote configuration, and working-tree status. Preserve all unrelated work.
+2. Create these directories if they do not exist:
+
+   * `docs/governance/`
+   * `docs/governance/approvals/`
+3. Copy the attached approved constitution, without changing any bytes, to:
+
+   * `docs/governance/PRODUCT_CONSTITUTION.md`
+4. Verify that its SHA-256 digest is exactly:
+
+   * `51382d33f492eb9e212d3e10bd5c8ddac59313e155327bd31e46329f10bc0c41`
+5. Copy the attached approval record to:
+
+   * `docs/governance/approvals/PRODUCT_CONSTITUTION_v1.0_APPROVAL_RECORD.md`
+6. In the approval record only, replace:
+
+   * `Pending canonical placement and synchronization`
+
+   with:
+
+   * `Git tag: product-constitution-v1.0`
+7. Do not revise, reformat, summarize, or otherwise alter the approved Constitution.
+8. Review the resulting Git diff and confirm that no files other than these two governance documents were changed.
+9. Commit the two files with this commit message:
+
+   * `Approve Provider Mesh Product Constitution v1.0`
+10. Push the commit to the repository’s primary GitHub branch.
+11. Create and push the annotated Git tag:
+
+* `product-constitution-v1.0`
+
+with the annotation:
+
+* `Approved Provider Mesh Product Constitution v1.0`
+
+12. If the canonical Constitution path already contains different content, or if the requested tag already exists and points to another commit, stop without overwriting anything and report the conflict.
+
+At completion, report:
+
+* branch name;
+* commit SHA;
+* GitHub push status;
+* tag push status;
+* canonical Constitution path;
+* approval-record path; and
+* verified SHA-256 digest of the canonical Constitution.
