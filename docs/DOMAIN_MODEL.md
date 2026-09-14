@@ -1,22 +1,26 @@
 # Provider Mesh Domain Model
 
 **Document ID:** PM-DM-001  
-**Version:** 0.3  
+**Version:** 0.4  
 **Status:** Approved — Controlling Domain Model — No Implementation Authority  
 **Owner:** Springboard Delaware  
 **Decision authority:** Judson Malone, Executive Director  
 **Approved by:** Judson Malone, Executive Director  
-**Approval date:** September 9, 2026  
+**Approval date:** September 14, 2026  
 **Scope:** Canonical business concepts, relationships, consistency boundaries, lifecycles, ownership, and invariants  
 **Canonical filename:** `DOMAIN_MODEL.md`  
 **Artifact identity:** Distinct non-canonical approved artifact  
 **Canonical path required for operational effect:** `docs/DOMAIN_MODEL.md`  
-**Controlling product document:** Provider Mesh Product Constitution v1.0  
-**Controlling architecture:** Provider Mesh System Architecture v0.1  
-**Development governance:** Springboard Software Development Governance v0.1  
-**Draft date:** September 9, 2026  
-**Revision basis:** Domain Model v0.1 structured review; Open Referral user personas; subsequent registration, helping-relationship, confidentiality, and consultant-participation decisions; and September 9, 2026 exploration of cross-domain person projections, workforce participation, and governed terminology growth  
-**Approved source SHA-256:** `f817fbbe5cc07bd1567f8732de31360017dc9b525cee43614b8a353bdee15b05`  
+**Controlling product document:** Provider Mesh Product Constitution v1.1  
+**Controlling architecture:** Provider Mesh System Architecture v0.2  
+**Development governance:** Springboard Software Development Governance v0.2  
+**Original draft date:** September 9, 2026  
+**Revision date:** September 14, 2026  
+**Revision basis:** Domain Model v0.3 approved artifact; approved PM-REVIEW-002 v0.1 corrections F03, F05, and C01; earlier modeling decisions carried forward as described in section 1.1  
+**Prior approved artifact SHA-256:** `01cd42335bb2a1e9e28a1bd030a7b6faa7b39726f2a29719214a3618a11346af`  
+**Amendment authority:** Judson Malone, September 14, 2026 — approved corrections from PM-REVIEW-002 v0.1 (F03, F05, and C01)  
+**Approved amendment proposal SHA-256:** `f627f867f7fc184e468b4f36154297afe2496fb37d13b501442715e9ecef3adc`  
+**Complete-artifact checksum and amendment record:** `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md` and `SHA256SUMS.txt`  
 
 > **Operational-effect notice:** This is the distinct approved Domain Model artifact. It becomes operationally controlling when placed byte-for-byte at the canonical repository path and synchronized in accordance with Springboard Software Development Governance. Approval of this Domain Model does not authorize implementation, production use, handling of real personal information, provider participation, external integration, or public release.
 
@@ -36,7 +40,7 @@ The model is designed to prevent five recurring errors:
 
 ### 1.1 Revision scope
 
-Version 0.3 incorporates the material findings identified in the structured review of Version 0.1 and the subsequent cross-domain review. It adds or clarifies:
+Version 0.4 applies the September 14, 2026 approved amendments F03, F05, and C01 from PM-REVIEW-002 v0.1: retention-bounded evidence preservation, explicit workforce connection targets and responses, and precise Collaboration authority summaries. It carries forward the Version 0.3 model, which incorporated the material findings in the structured review of Version 0.1 and the subsequent cross-domain review, including:
 
 - Service Connection as a first-class record distinct from Referral;
 - intrinsic Need lifecycle separate from Outcome Claims;
@@ -55,7 +59,7 @@ Version 0.3 incorporates the material findings identified in the structured revi
 - selective persistence and refresh rules for workforce opportunities and requirements; and
 - governed terminology growth from source-native observations through mapped, candidate, adopted, deprecated, or superseded concepts.
 
-These changes refine the model without changing the approved Product Constitution or System Architecture.
+The Version 0.3 changes refined the model under the then-approved Constitution and Architecture. This Version 0.4 is aligned with the coordinated Constitution v1.1, Architecture v0.2, and Development Governance v0.2 amendments. It does not select implementation products or resolve the subordinate decisions listed in section 25.
 
 ## 2. Modeling doctrine
 
@@ -182,6 +186,8 @@ These states describe evidence and representation. They do not substitute for wo
 Corrections normally create an annotation, replacement, de-link, or superseding record. They must preserve enough history to explain what was represented, what changed, why it changed, and who authorized the change.
 
 Silent overwriting is prohibited when the earlier value affected identity, access, referral, collaboration, recommendation, custody, outcome, or another consequential decision.
+
+Requirements to preserve source language, versions, lineage, correction history, or evidence apply within the lawful, purpose-specific retention boundary. They prohibit silent rewriting while information is retained; they do not independently authorize perpetual retention. Disposition must preserve any separately required accountability evidence and state resulting reconstruction limits.
 
 ### 4.6 Common accountability fields
 
@@ -529,7 +535,7 @@ Referral, coordination, satisfaction, unmet status, partial progress, and inabil
 | Apprenticeship Sponsor Capacity | The Organization Capacity responsible for governing an apprenticeship that combines paid employment and structured learning |
 | Work-Based-Learning Host Capacity | The Organization Capacity in which an Organization hosts an internship, work experience, on-the-job learning, or other structured workplace opportunity |
 | Provider identifier | A namespaced identifier assigned by an authoritative or publishing system |
-| Organization | The institution responsible for one or more programs or services |
+| Organization | The recognized institution defined in section 5.1. Its contextual capacities may include Provider, employer, training provider, apprenticeship sponsor, or another approved function. Organization identity does not require Provider capacity |
 | Program | An optional administrative grouping under which services are organized |
 | Service | A defined capability or assistance offering |
 | Opportunity | A bounded opening through which a person may obtain employment, housing, education, training, an appointment, a placement, or another scarce or time-sensitive benefit |
@@ -835,7 +841,7 @@ Reference: [W3C SKOS Reference](https://www.w3.org/TR/skos-reference/skos.html);
 
 ### 9.9 Terminology invariants
 
-1. Source-native language, code, description, Source, and observation time must remain available after normalization or mapping.
+1. Source-native language, code, description, Source, and observation time must remain available after normalization or mapping within the lawful, purpose-specific retention boundary in section 4.5.
 2. AI may propose a Classification Assertion, Taxonomy Mapping, alternative label, or Concept Candidate; it must not silently adopt canonical meaning.
 3. An adopted Concept requires accountable stewardship and versioned change history.
 4. Mapping confidence must not be converted into Source authority, clinical diagnosis, Provider eligibility, urgency, suitability, or outcome.
@@ -1000,7 +1006,7 @@ Revocation or expiration ends future use to the extent required by the governing
 
 ### 11.1 Purpose
 
-A Service Connection is the Mesh account of an attempt to help a person reach or begin engagement with a Provider, Service, Program, Location, or access pathway. It covers the practical connection between discovery and Provider-controlled intake whether the interaction occurs through the Mesh, by telephone, through a website or portal, in person, or through another authorized channel.
+A Service Connection is the Mesh account of an attempt to help a person reach or begin engagement with an Organization acting in an identified capacity and a selected Opportunity, including an Employment Opportunity or Learning Opportunity, as well as a Provider, Service, Program, Location, or access pathway. It covers the practical connection between discovery and the relevant external application, admission, hiring, or Provider-controlled intake process, whether the interaction occurs through the Mesh, by telephone, through a website or portal, in person, or through another authorized channel.
 
 A Service Connection is broader than a Referral. A Referral is one formal, authorized type of Service Connection. A candidate merely displayed or discussed is not a Service Connection until a person or authorized helper takes or accepts a connection action.
 
@@ -1009,14 +1015,14 @@ A Service Connection is broader than a Referral. A Referral is one formal, autho
 | Concept | Definition |
 |---|---|
 | Service Connection | The durable root record for a bounded attempt to connect a person or purpose-bound Assistance Group to help |
-| Connection Intent | The Need, desired result, selected candidate, preferences, and constraints that explain why the connection is attempted |
-| Connection Participant | A person, requester, helper, Provider representative, Organization, or automated Actor participating in the connection |
+| Connection Intent | The Need, desired result, selected target and offering party/capacity, preferences, and constraints that explain why the connection is attempted |
+| Connection Participant | A person, requester, helper, Provider or other Organization representative acting in an identified capacity, Organization, or automated Actor participating in the connection |
 | Connection Channel | The route used or proposed, such as telephone, website, portal, email, in-person visit, Referral, API, or MCP capability |
 | Connection Attempt | A time-bounded action taken to establish contact, transmit a request, schedule a next step, or otherwise advance access |
 | Connection Event | An attributable observation or report about a material step in the connection |
 | Connection Responsibility | A follow-up duty expressly accepted by an Actor or Organization |
 | Provider Engagement Claim | A Provider-attributable or otherwise sourced claim that the Provider acknowledged, accepted, enrolled, scheduled, or began serving the person |
-| Connection Outcome Claim | A sourced claim about contact, barrier, progress, service access, experience, or result |
+| Connection Outcome Claim | A sourced claim about contact, barrier, progress, service access, employment, learning, experience, or result |
 | Connection Disposition | The Mesh's administrative treatment of the connection record, separate from Provider engagement and outcome |
 
 ### 11.3 Connection structure
@@ -1034,7 +1040,7 @@ flowchart TB
     SC --> OC
 ~~~
 
-A Service Connection may reference a Discovery Candidate, Need, Mesh Person or provisional person context, Provider, Service, Referral, and Action Item. Those references do not collapse their independent authority or lifecycles.
+A Service Connection may reference a Discovery Candidate, Need, Mesh Person or provisional person context, Organization and its identified capacity, Opportunity (including an Employment Opportunity or Learning Opportunity), Provider, Service, Program, Location, access pathway, Referral, and Action Item. The connection must identify the selected target and its offering party sufficiently to preserve the action, authority, and evidence relied upon. A generic Candidate reference must not obscure whether the action concerns employment, learning, or Provider service. Those references do not collapse their independent authority or lifecycles.
 
 ### 11.4 Status dimensions
 
@@ -1045,19 +1051,22 @@ Service Connection status is represented through separate dimensions:
 | Intent | proposed, selected, deferred, declined, withdrawn |
 | Attempt | not started, attempted, retry planned, completed for channel, failed, result unknown |
 | Contact | not observed, initiated, established, unable to determine |
-| Provider engagement | not observed, acknowledged, accepted, declined, scheduled, enrolled, service started, unable to determine |
+| Provider engagement (Provider activity only) | not observed, acknowledged, accepted, declined, scheduled, enrolled, service started, unable to determine |
+| Opportunity response | separate attributable Connection Events for application, admission, hiring, or learning responses, as applicable |
 | Responsibility | unassigned, offered, accepted, completed, released, expired |
 | Disposition | open, awaiting action, inactive, procedurally closed |
-| Outcome | separate sourced Claims, including barrier, service received, need reported satisfied, need reported unmet, or unknown |
+| Outcome | separate sourced Claims, including barrier, service received, employment or learning progress, need reported satisfied, need reported unmet, or unknown |
 
 One dimension must not imply another. In particular, a completed Connection Attempt does not prove contact; contact does not prove Provider acceptance; acceptance does not prove enrollment or service receipt; and procedural closure does not prove Need satisfaction.
+
+Provider engagement states apply to Provider activity. Employer or learning-opportunity responses are recorded as attributable Connection Events and appropriate Outcome Claims, preserving application, admission, hiring, employment, learning, and service meanings separately. A sourced Employment Relationship or Placement Outcome may reference the relevant opportunity and connection. Such linkage does not make employment Provider service delivery or create a formal Referral.
 
 ### 11.5 Connection lifecycle
 
 1. A person or authorized requester selects or accepts a proposed connection action.
 2. The Mesh records the Connection Intent and the minimum participants, target, and channel required for accountability.
 3. Identity and authority are established only to the degree required by the information and action.
-4. The person, helper, Provider, or authorized capability makes a Connection Attempt.
+4. The person, helper, Provider or other Organization representative acting within the relevant capacity, or authorized capability makes a Connection Attempt.
 5. Subsequent events are recorded only when observed or reported by an attributable source.
 6. Follow-up responsibility exists only when expressly accepted.
 7. The connection may remain open, be retried, become a Referral, relate to a Collaboration, or close procedurally without implying a service outcome.
@@ -1068,10 +1077,10 @@ One dimension must not imply another. In particular, a completed Connection Atte
 2. A person may make a direct Service Connection without creating a Referral.
 3. A Referral references or creates one bounded Service Connection; it does not replace the Service Connection concept.
 4. Out-of-Mesh communications remain unknown unless an authorized Actor reports them or a governed capability observes them.
-5. The Provider remains authoritative for its intake, acceptance, enrollment, professional decisions, and service records.
+5. The Provider remains authoritative for its intake, acceptance, enrollment, professional decisions, and service records. Employers, learning providers, sponsors, and issuers retain their respective hiring, admission, employment, learning, and credential decision authority; Mesh reports preserve their source and uncertainty.
 6. The Mesh must identify the source of each reported Connection Event and outcome.
 7. A requester is not assigned indefinite follow-up merely because the requester supplied information or initiated contact.
-8. A failed attempt does not establish Provider refusal, service unavailability, or Need resolution.
+8. A failed attempt does not establish Provider refusal, employer rejection, learning-admission refusal, service or opportunity unavailability, or Need resolution.
 9. A Service Connection does not automatically create a Helping Relationship or Collaboration.
 10. Connection history must not be used to restrict a person's future choices without separate lawful authority.
 
@@ -1159,7 +1168,7 @@ Each Script Version must retain:
 - related Document References; and
 - relationship to prior versions.
 
-A sent version must remain reproducible. Later corrections produce another version or an attached correction; they must not silently change what the recipient received.
+During its authorized retention period, a sent Script Version must remain reproducible as the content that was disclosed. Later corrections create a new version or an attributable correction and must not silently change the sent version. Authorized disposition may end content reproducibility. After disposition, preserve only the accountability evidence independently permitted by the applicable schedule or hold, and identify what can and cannot still be reconstructed. An integrity digest or version reference does not recreate disposed content.
 
 ### 12.7 Referral custody
 
@@ -1242,7 +1251,7 @@ AI extraction or summarization produces a Document Processing Result. It does no
 ### 13.5 Document invariants
 
 1. An Envelope holds references, not duplicate document binaries.
-2. A Document Version is immutable once used as evidence or disclosed.
+2. A Document Version is immutable once used as evidence or disclosed while it is lawfully retained. Authorized disposition follows section 4.5 and must state resulting reconstruction limits; immutability does not override a valid retention schedule or hold.
 3. A later document creates a new version or separate asset.
 4. Access to metadata does not automatically authorize access to content.
 5. Access must be purpose-, recipient-, and time-bounded.
@@ -1272,7 +1281,7 @@ A Collaboration is a governed many-to-many relationship among organizations purs
 | Person Participation | The bounded inclusion of a Mesh Person in person-specific Collaboration activity |
 | Collaboration Information Grant | Authority to contribute or access information within the Collaboration |
 | Case Review | A scheduled or ad hoc person-specific multi-party coordination activity |
-| Case Review Participant | A Human Actor admitted to a defined Case Review under the Charter, Person Participation authority, and applicable Confidentiality Obligation |
+| Case Review Participant | A Human Actor admitted to a defined Case Review under the applicable Charter and Confidentiality Obligation, with Person Participation and disclosure authority for identifiable activity or the eligible de-identified consultation route in section 14.6 |
 | Sponsored Participant | A non-member Human Actor invited by an authorized Collaboration participant for a defined Case Review purpose |
 | Sponsor Assertion | The sponsor's attributable statement of the invited person's identity, affiliation, claimed credentials, relevance, and represented expertise |
 | Expert Consultant | A contextual label for a Case Review Participant invited to contribute knowledge or guidance without accepting direct service or case-management responsibility |
@@ -1299,6 +1308,8 @@ flowchart TB
     C --> PP
     PP --> CR
 ~~~
+
+The diagram depicts identifiable case activity. Eligible de-identified consultation follows section 14.6 without requiring a Mesh Person link.
 
 Each Collaboration is a separate information and authority compartment. A person may participate in several Collaborations without information flowing automatically among them.
 
@@ -1351,12 +1362,12 @@ For a Sponsored Participant, the minimum join sequence is:
 2. the sponsor records a Sponsor Assertion explaining the invited person's asserted identity, affiliation, claimed credentials, relevance, and intended contribution;
 3. the invited person confirms their identity, represented affiliation, and capacity at the assurance level required for the session;
 4. the invited person accepts the applicable Case Review Confidentiality Agreement or demonstrates another adequate Confidentiality Obligation;
-5. the Authorization Decision confirms that the Charter and Person Participation authority permit the participant class and intended disclosure; and
+5. the Authorization Decision confirms that the Charter and applicable disclosure authority permit the participant class and intended disclosure, including Person Participation for identifiable activity or the eligible de-identified route described below; and
 6. attendance, effective access, and departure are recorded.
 
 The Mesh records the sponsor's assertion as reported. It must not imply that Springboard independently licensed, certified, or endorsed the person's expertise unless a separate verification occurred. A Collaboration may define higher verification for higher-consequence participation.
 
-An adequate general Case Review Confidentiality Agreement may cover repeated eligible sessions. Confidentiality is necessary but not sufficient: an NDA does not itself authorize disclosure, and access remains limited by Person Participation, purpose, information category, meeting, time, and role.
+An adequate general Case Review Confidentiality Agreement may cover repeated eligible sessions. Confidentiality is necessary but not sufficient: an NDA does not itself authorize disclosure, and access remains limited by purpose, information category, meeting, time, role, and the applicable identifiable or de-identified disclosure authority. Person Participation is required for identifiable case activity.
 
 An Expert Consultant is not automatically a Provider, helper, referrer, Collaboration Member, credential class, or referral target. Consultation is not a Referral or Provider service. A Consultant becomes a helper or Provider participant only through a separate relationship, authority, responsibility, and—where applicable—Provider identity or participation transition.
 
@@ -1378,7 +1389,7 @@ The receiving Provider, not merely the original requester, must authorize contri
 
 ### 14.8 Collaboration invariants
 
-1. A Collaboration has one active Charter Version at a time.
+1. A Collaboration has at most one currently effective Charter Version. A proposed or historical Collaboration record may exist without current operational authority. Active governed Collaboration activity requires the applicable effective Charter and organizational authority; identifiable case activity additionally requires Person Participation and disclosure authority. Eligible de-identified consultation follows section 14.6. No person-specific permission is created by organizational formation, a retained historical record, or charter approval.
 2. Organizations, not software alone, establish Collaboration legitimacy.
 3. Each Member retains its own professional duties, case-management method, and system of record.
 4. A lead or backbone role is limited to the Charter mandate.
@@ -1654,7 +1665,7 @@ Analytic models must distinguish:
 ### 18.4 Analytics invariants
 
 1. Every Analytic Dataset has one or more explicit authorized purposes.
-2. Source lineage remains traceable even when direct identifiers are removed.
+2. Source lineage remains traceable even when direct identifiers are removed, within the lawful, purpose-specific retention boundary in section 4.5. Authorized disposition must identify any resulting limits on lineage reconstruction.
 3. Operational users do not automatically receive analytic access, and analytic users do not automatically receive operational access.
 4. Reporting and participation gaps remain part of the result.
 5. Identifiable longitudinal research requires the separate authority required by the Constitution.
@@ -1676,7 +1687,7 @@ A consistency boundary identifies a group of records whose invariants must be ev
 | Evidence Claim | Claim provenance, relationships, correction, dispute, and supersession | Workflow status or authorization |
 | Discovery Request | Request version, attempts, candidate evaluations, and presented Candidate Sets | Referral transmission or Provider response |
 | Authority Record | Source or issuer, basis, scope, duration, status, revocation, and decision references | Authentication credentials or inferred consent |
-| Service Connection | Intent, participants, channels, attempts, events, responsibilities, disposition, and Outcome Claims | Provider-controlled intake or service record |
+| Service Connection | Intent, selected target and offering party/capacity, participants, channels, attempts, events, responsibilities, disposition, and Outcome Claims | Provider-controlled intake/service record, employer personnel record, or learning provider's internal student record |
 | Referral | Envelope, Script versions, authorized references, transport, response evidence, disposition, and follow-up assignments | Provider case record or automatic Collaboration membership |
 | Document Record | Asset versions, subjects, integrity, references, access grants, custody, and disposition | Authority unrelated to the document’s purpose |
 | Collaboration | Charter versions, Members, representatives, Sponsored Participants, consultations, Person Participation, communications, reviews, tasks, and measures | Authority in another Collaboration or control of Member systems |
@@ -1703,13 +1714,14 @@ Ownership here means accountability for the authoritative record or decision. It
 | Employment Opportunity and hiring terms | Employer or authorized publisher | Record observed terms, freshness, access pathway, and evidence relied upon without assuming continued availability |
 | Learning Opportunity and Credential | Training provider, sponsor, issuer, regulator, or authorized publisher as applicable | Preserve identity, mappings, published requirements, authority, and current-use evidence |
 | Incentive Program and determination | Program administrator or designated determining authority | Represent program rules and case-specific determinations only from attributable, time-bounded evidence |
-| Employment Relationship and Placement Outcome | Employer, person, workforce program, or other direct Source according to Claim type | Preserve attribution and disagreement without becoming the employer's personnel system |
+| Employment Relationship and Placement Outcome | Employer, person, workforce program, or other direct Source according to Claim type | Preserve attribution, disagreement, and relevant opportunity/connection links without becoming the employer's personnel system |
 | Provider eligibility and professional decision | Provider | Represent only from attributable Provider evidence |
 | Discovery activity and Candidate presentation | Provider Mesh | Preserve request, evidence, evaluation, and uncertainty |
 | Helping Relationship responsibility | Person or other legitimate authority and the accepting helper | Record scope, authority, acceptance, and ending without granting implicit cross-helper access |
 | Authority contributed by a participant | Issuer under applicable law or agreement | Validate scope and enforce within the Mesh |
 | Mesh Authorization Decision | Provider Mesh | Apply approved rules and retain accountability |
-| Service Connection and Mesh-observed attempts | Provider Mesh | Maintain the accountable connection history while preserving Provider system authority |
+| Service Connection and Mesh-observed attempts | Provider Mesh | Maintain the target, offering capacity, action, and evidence while preserving Provider, employer, and learning-system authority |
+| Employer or learning-opportunity response | Employer, learning provider, person, or other direct Source according to Claim type | Record attributable Connection Events and appropriate Outcome Claims without implying Provider engagement or a formal Referral |
 | Referral Envelope and Mesh transport history | Provider Mesh | Maintain authoritative transaction account |
 | Provider acceptance | Provider | Record only when attributable to the Provider |
 | Provider-created service record | Provider | Do not replicate as a false Mesh system of record |
@@ -1826,6 +1838,7 @@ Event names ending in **Requested**, **Attempted**, **Reported**, **Observed**, 
 - ServiceConnectionCreated
 - ConnectionAttemptRecorded
 - ConnectionContactReported
+- ConnectionResponseReported
 - ConnectionResponsibilityAccepted
 - ConnectionResponsibilityReleased
 - ProviderEngagementReported
@@ -1859,6 +1872,8 @@ Event names ending in **Requested**, **Attempted**, **Reported**, **Observed**, 
 - ResourceTransactionExpired
 - ResourceTransactionReleased
 - ResourceTransactionReconciled
+
+ConnectionResponseReported records an attributable response to the selected connection target, including an employer or learning opportunity, with its source and represented capacity. ProviderEngagementReported applies only to Provider activity. Employment, learning, and placement results use the relevant sourced Outcome Claims and, where supported, Employment Relationship or Placement Outcome links; an event does not itself establish hiring, admission, service delivery, or a Referral.
 
 ### 21.6 Collaboration and outcomes
 
@@ -1917,11 +1932,11 @@ The following rules apply across all domain areas:
 14. Provider Encounter, Provider Participation, and Provider identity resolution remain separate.
 15. Provider participation does not create preferential discovery treatment.
 16. A Recommendation remains explainable in terms of Need and evidence.
-17. A Service Connection records an accepted attempt to reach help; it does not prove Provider engagement or service receipt.
+17. A Service Connection records an accepted attempt to reach help through an identified target and offering capacity; it does not prove Provider engagement, service receipt, hiring, admission, or learning completion.
 18. A Referral is an authorized bounded handoff and one formal type of Service Connection, not a service guarantee.
-19. Connection attempt, Referral transport, Provider response, Procedural Disposition, and Outcome Claims remain separate.
+19. Connection attempt, Referral transport, Provider or other offering-party response, Procedural Disposition, and Outcome Claims remain separate.
 20. A Referral does not automatically become a Collaboration.
-21. A Collaboration exists only under an approved Charter and applicable person authority.
+21. A Collaboration has at most one currently effective Charter Version. A proposed or historical Collaboration record may exist without current operational authority. Active governed Collaboration activity requires the applicable effective Charter and organizational authority; identifiable case activity additionally requires Person Participation and disclosure authority. Eligible de-identified consultation follows section 14.6. No person-specific permission is created by organizational formation, a retained historical record, or charter approval.
 22. Each Collaboration is a separate information and authority compartment.
 23. A Consultant is a contextual Case Review Participant, not automatically a Provider, helper, referrer, Member, or referral target.
 24. A Confidentiality Agreement governs protection of information; it does not itself authorize disclosure.
@@ -1932,7 +1947,7 @@ The following rules apply across all domain areas:
 29. Springboard platform stewardship, Springboard service delivery, and Collaboration backbone roles remain separately represented and authorized.
 30. Information access follows validated identity and capacity, authority, purpose, information, action, recipient, confidentiality, context, and time—not technical availability.
 31. Revocation limits future reliance as required but does not falsify legitimate prior custody or audit history.
-32. Corrections preserve consequential history while repairing current projections.
+32. Corrections preserve consequential history while repairing current projections, subject to the lawful retention and disposition boundary in section 4.5.
 33. Documents may have multiple subjects; access must account for all materially affected subjects.
 34. Narrative and structured representations remain distinguishable and source-linked.
 35. Activity, coordination, service receipt, individual outcome, and population change are different Claims.
@@ -1944,7 +1959,7 @@ The following rules apply across all domain areas:
 41. Organization Capacities are contextual, independently evidenced, and may overlap; they must not be treated as permanent mutually exclusive Organization types.
 42. Service, Opportunity, Learning Opportunity, Employment Opportunity, Employment Relationship, Credential, Occupation, incentive, and Outcome Claim remain distinguishable.
 43. Clinical rehabilitation, vocational rehabilitation, recovery-supportive employment, training, and employment must not be collapsed because a single program or Organization connects them.
-44. Source-native terminology remains preserved after classification, mapping, or normalization.
+44. Source-native terminology remains preserved after classification, mapping, or normalization within the lawful retention boundary in section 4.5.
 45. AI may propose terminology and mappings but cannot silently establish canonical meaning.
 46. Taxonomy changes preserve the vocabulary and mapping versions used in consequential historical actions.
 47. External schemas and reporting standards are purpose-bound projections and do not create universal collection requirements.
@@ -2002,6 +2017,7 @@ Service Connection, Referral, authority, document, Resource Transaction, and Col
 6. Adoption of an external standard does not expand authority to collect, retain, disclose, or reuse its available fields.
 7. A reporting schema is not automatically an operational intake requirement or canonical personal record.
 8. Cross-domain projection must not convert a contextual label such as patient, client, student, participant, trainee, or employee into the person's universal identity.
+9. Preservation of source, versions, and lineage follows section 4.5; rebuilding or exchanging a projection must not imply that disposed source content remains reconstructable.
 
 ## 24. Conceptual relationship summary
 
@@ -2015,12 +2031,12 @@ The central relationship chain is:
 6. If only information is wanted, the interaction may end without person identity, Service Connection, or Referral.
 7. A person may register voluntarily at any point, but registration creates only the bounded internal Mesh relationship.
 8. When a person or authorized helper accepts an action intended to reach help, the Mesh may create a Service Connection and establish only the identity and authority required by that action.
-9. A direct telephone call, website visit, appointment request, or in-person contact may advance the Service Connection without a Referral.
+9. A direct telephone call, website visit, appointment request, employment or learning application, or in-person contact may advance the Service Connection without a Referral. The selected Organization, offering capacity, and Opportunity are preserved where applicable.
 10. When an authorized formal handoff is requested, a Referral Envelope binds the selected Provider, Receiving Point of Contact, Script, Document References, transport, and disposition.
 11. The Provider remains responsible for intake, acceptance, professional decisions, and service records.
 12. Reported responses and outcomes return as attributable Claims, not assumed facts.
 13. A person may have multiple separately bounded helpers; one helper's relationship does not expose another's activity.
-14. Multi-provider work occurs only inside a separately chartered Collaboration with Person Participation and information authority.
+14. Active governed Collaboration work requires the applicable effective Charter and organizational authority. Identifiable case activity additionally requires Person Participation and disclosure authority; eligible de-identified consultation follows section 14.6. Proposed or historical records do not create current operational authority.
 15. An authorized participant may sponsor a Consultant for bounded Case Review participation; the consultation does not become a Referral or Service.
 16. Authorized operational history may support learning only through the separate analytics boundary.
 17. Domain standards may project applicable records for exchange or reporting, but no projection becomes the complete Person, Organization, Provider, Service, Opportunity, or Mesh domain.
@@ -2079,12 +2095,12 @@ Before this Domain Model may be approved, review must establish that it:
 13. supports multiple independently bounded Helping Relationships;
 14. makes authority purpose-, information-, action-, recipient-, context-, and time-bounded;
 15. separates authority, confidentiality, role-based capability, and the instance-specific Authorization Decision;
-16. defines Service Connection independently from Discovery, Referral, Provider engagement, and service outcome;
+16. defines Service Connection independently from Discovery, Referral, Provider engagement, and service outcome, and represents a pure employer application, a learning application, and combined apprenticeship relationships with explicit targets, capacities, evidence, responses, and outcomes;
 17. separates Referral preparation, authorization, transport, Provider response, procedural disposition, and outcome;
 18. treats documents as secure governed assets with explicit subjects and purpose-bound references;
 19. represents Resource Transactions without treating availability, reservation, admission, or service receipt as equivalent;
 20. separates one-to-one Referral coordination from formal multi-provider Collaboration;
-21. supports low-friction sponsored Consultant participation without converting consultation into Provider service or Referral;
+21. supports low-friction sponsored Consultant participation without converting consultation into Provider service or Referral, distinguishes Collaboration existence from active Charter authority, and applies Person Participation to identifiable activity while preserving eligible de-identified consultation;
 22. preserves Provider, external-system, and Collaboration systems-of-record boundaries;
 23. distinguishes narrative, structured extraction, Action Status, and Outcome Claim;
 24. preserves uncertainty and source accountability;
@@ -2094,7 +2110,7 @@ Before this Domain Model may be approved, review must establish that it:
 28. leaves unresolved technical, security, policy, and workflow details to the correct subordinate documents;
 29. treats Provider, employer, training provider, vocational-rehabilitation provider, apprenticeship sponsor, and work-based-learning host as contextual and potentially overlapping capacities;
 30. distinguishes Service, Learning Opportunity, Employment Opportunity, Employment Relationship, Credential, Competency, Occupation, incentive, and Placement Outcome;
-31. preserves source-native terminology while supporting governed concepts, mappings, local extensions, lifecycle, and historical version traceability;
+31. preserves source-native terminology while supporting governed concepts, mappings, local extensions, lifecycle, and historical version traceability within lawful retention, with explicit limits after authorized disposition;
 32. permits AI to propose but not silently adopt canonical terminology;
 33. separates stable identity and relied-upon evidence from volatile opportunity, requirement, capacity, and incentive Claims that require refresh; and
 34. treats HSDS, HMIS, C-CDA, FHIR, CTDL, O*NET-SOC, CIP, HR Open, WIOA PIRL, RSA-911, and similar standards as bounded projections or Concept Schemes rather than complete internal domains.
@@ -2111,14 +2127,14 @@ Before this Domain Model may be approved, review must establish that it:
 | Proportionate and contestable identity | 6 |
 | Bounded trusted relationships | 5, 10 |
 | Confidentiality follows information | 10, 12–14, 20 |
-| Service Connection and Referral as distinct bounded activity | 11–13 |
+| Service Connection and Referral as distinct bounded activity, including employer and learning targets | 8, 11–13, 19–21 |
 | Provider identity independent of representation and membership | 8–9 |
 | Contextual employer, training, vocational-rehabilitation, apprenticeship, and work-based-learning capacities | 5, 8, 20, 22–23 |
 | Governed, discovery-led terminology growth | 9, 21–23 |
 | External standards as bounded projections | 2, 8–9, 23 |
 | Charter-governed Collaboration and sponsored consultation | 14 |
 | Separation of backbone, Provider, and platform roles | 5, 14, 17, 20 |
-| Selective persistence | 4, 6–7, 11, 13, 18 |
+| Selective persistence, historical reproducibility, and lawful disposition | 4.5, 6–7, 9.9, 11–13, 18.4, 23.6 |
 | Authorized learning | 15, 18 |
 | Organic, honest growth | 8–9, 16 |
 | Human accountability and remedy | 17, 20–22 |
@@ -2156,7 +2172,7 @@ This index points to the authoritative definition or governing section. It does 
 | Employer, Training Provider, Vocational-Rehabilitation Provider, Apprenticeship Sponsor, and Work-Based-Learning Host Capacities | 8.1, 8.8–8.10 |
 | Opportunity, Learning Opportunity, and Employment Opportunity | 8.1–8.2, 8.8–8.10 |
 | Credential, Competency, and Occupation | 8.1, 8.8–8.10 |
-| Employment Relationship and Placement Outcome | 8.1, 8.8–8.10 |
+| Employment Relationship and Placement Outcome | 8.1, 8.8–8.10, 11.4, 20 |
 | Incentive Program, Incentive Eligibility Claim, and Incentive Determination | 8.1, 8.8–8.10 |
 | Outcome Claim | 15.1, 15.4–15.5 |
 | Person Participation and Case Review Participant | 14.2, 14.5–14.6 |
@@ -2171,11 +2187,13 @@ This index points to the authoritative definition or governing section. It does 
 ## 29. Approval record
 
 **Approval status:** Approved — Controlling Domain Model  
-**Approved version:** 0.3  
+**Approved version:** 0.4  
 **Approved by:** Judson Malone, Executive Director  
-**Approval date:** September 9, 2026  
-**Approved source SHA-256:** `f817fbbe5cc07bd1567f8732de31360017dc9b525cee43614b8a353bdee15b05`  
+**Approval date:** September 14, 2026  
+**Prior approved artifact SHA-256:** `01cd42335bb2a1e9e28a1bd030a7b6faa7b39726f2a29719214a3618a11346af`  
 **Canonical repository path:** `docs/DOMAIN_MODEL.md`  
 **Canonical repository reference:** Pending canonical placement and synchronization  
 
 This approved Domain Model remains non-operational until byte-identical canonical placement, commit, and synchronization. It does not authorize implementation without an approved bounded implementation specification and applicable subordinate controls.
+
+The September 14, 2026 approval authorizes the specified amendments to the previously approved version. The exact revised artifact is identified by its complete-file SHA-256 in `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md`. Prior-version and amendment-proposal hashes above identify their respective source artifacts; neither is the checksum of this revised file. Canonical placement and synchronization are recorded separately.

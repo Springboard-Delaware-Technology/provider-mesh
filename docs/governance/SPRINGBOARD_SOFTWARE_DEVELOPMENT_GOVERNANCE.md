@@ -1,14 +1,21 @@
 # Springboard Software Development Governance
 
 **Document ID:** SB-SDG-001  
-**Version:** 0.1  
+**Version:** 0.2  
 **Status:** Approved — Controlling Software Development Governance  
 **Owner:** Springboard Delaware  
 **Decision authority:** Judson Malone, Executive Director  
 **Scope:** Reusable governance for Springboard software projects  
 **Artifact identity:** Distinct non-canonical approved artifact  
 **Canonical path required for operational effect:** `docs/governance/SPRINGBOARD_SOFTWARE_DEVELOPMENT_GOVERNANCE.md`  
-**Date:** September 6, 2026  
+**Date:** September 14, 2026  
+**Approved by:** Judson Malone, Executive Director  
+**Approval date:** September 14, 2026  
+**Previous approved version:** 0.1 — September 6, 2026  
+**Prior approved artifact SHA-256:** `839edb43cef4f5a675188ac7c2a7200c72139a4933bd9a49bde3ed74d121c8be`  
+**Amendment authority:** Judson Malone, September 14, 2026 — approved corrections from PM-REVIEW-002 v0.1 (F02)  
+**Approved amendment proposal SHA-256:** `f627f867f7fc184e468b4f36154297afe2496fb37d13b501442715e9ecef3adc`  
+**Complete-artifact checksum and amendment record:** `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md` and `SHA256SUMS.txt`  
 
 ## 1. Purpose
 
@@ -256,6 +263,10 @@ Examples:
 - Security incident response
 
 Authorization: an explicit current human decision and an applicable approved production or recovery runbook are required.
+
+For incident containment, an explicit, still-effective human authorization may establish a bounded standing delegation for specified protective actions under an approved runbook. The delegation must identify the authorized actors or automated mechanisms, triggering conditions, affected resources, permitted actions, limits, review or expiry conditions, and subsequent human review. A runbook does not supply this delegation merely by existing.
+
+This provision does not authorize new disclosure, exceptional content access, access restoration, destruction of records, production deployment, or other Class D activity outside the explicit delegation. Those actions retain their applicable human-authorization requirements. A standing containment delegation under this provision is limited to reducing access or stopping exposure; it cannot supply authority for the excluded actions.
 
 ## 8. Specification lifecycle
 
@@ -599,7 +610,10 @@ Lessons from implementation should improve governance when they reveal a recurri
 
 **Approval status:** Approved — Controlling Software Development Governance  
 **Approved by:** Judson Malone, Executive Director  
-**Approval date:** September 6, 2026  
+**Approval date:** September 14, 2026  
+**Approved version:** 0.2  
 **Controlling Git reference:** Established by the synchronized `origin/main` commit containing this exact approved version  
 
 This is the distinct approved artifact. It becomes operational for a project only after byte-identical placement at the canonical path, commit and synchronization to that project's controlling repository, and alignment of the repository operating control. Until those steps are complete, the project's existing approved operating control remains active.
+
+The September 14, 2026 approval authorizes the specified amendments to the previously approved version. The exact revised artifact is identified by its complete-file SHA-256 in `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md`. Prior-version and amendment-proposal hashes above identify their respective source artifacts; neither is the checksum of this revised file. Canonical placement and synchronization are recorded separately.

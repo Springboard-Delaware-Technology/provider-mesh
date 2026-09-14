@@ -1,19 +1,22 @@
 # Provider Mesh System Architecture
 
 **Document ID:** PM-SA-001  
-**Version:** 0.1  
+**Version:** 0.2  
 **Status:** Approved — Controlling System Architecture — No Implementation Authority  
 **Owner:** Springboard Delaware  
 **Decision authority:** Judson Malone, Executive Director  
 **Approved by:** Judson Malone, Executive Director  
-**Approval date:** September 8, 2026  
+**Approval date:** September 14, 2026  
 **Scope:** Durable system structure, component responsibilities, trust boundaries, information flows, integration model, and architectural constraints  
 **Canonical filename:** `SYSTEM_ARCHITECTURE.md`  
 **Artifact identity:** Distinct non-canonical approved artifact  
 **Canonical path required for operational effect:** `docs/SYSTEM_ARCHITECTURE.md`  
-**Controlling product document:** Provider Mesh Product Constitution v1.0  
-**Development governance:** Springboard Software Development Governance v0.1  
-**Approved source SHA-256:** `33dd29aa651cbb9fcce876452c8a08c4ea6422bd680c1705e39e2bec3c17bb8e`  
+**Controlling product document:** Provider Mesh Product Constitution v1.1  
+**Development governance:** Springboard Software Development Governance v0.2  
+**Prior approved artifact SHA-256:** `8deb76ab714bdf89ce0029984d58107459882f9beed310a90a7f6fff93baad8d`  
+**Amendment authority:** Judson Malone, September 14, 2026 — approved corrections from PM-REVIEW-002 v0.1 (F01, F05 architecture alignment, C02, and F04 cross-reference)  
+**Approved amendment proposal SHA-256:** `f627f867f7fc184e468b4f36154297afe2496fb37d13b501442715e9ecef3adc`  
+**Complete-artifact checksum and amendment record:** `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md` and `SHA256SUMS.txt`  
 
 > **Operational-effect notice:** This is the distinct approved architecture artifact. It becomes operationally controlling when placed byte-for-byte at the canonical repository path and synchronized in accordance with Springboard Software Development Governance. Approval of this architecture does not authorize Class C implementation, production use, handling of real personal information, provider participation, external integration, or public release.
 
@@ -200,7 +203,7 @@ Urgent safety routing may interrupt any state. It does not create a general Spri
 
 ### 6.3 Model Gateway
 
-All AI-model use passes through a governed Model Gateway rather than being embedded independently throughout the application.
+All AI-model processing within the Mesh application and its operational data workflows passes through the governed Model Gateway. External drafting, coding, and synthetic evaluation tools operate only under their separately approved development authority and data restrictions; they may precede the production gateway and do not authorize a bypass for Mesh operational data.
 
 Responsibilities:
 
@@ -225,7 +228,7 @@ Responsibilities:
 - represent location, service area, travel mode, accessibility, remote-service options, and time constraints needed to interpret terms such as "near me";
 - identify which source capabilities are relevant;
 - query multiple available sources through the Integration Manifold;
-- normalize and deduplicate provider, service, and location candidates;
+- normalize and deduplicate provider, service, and location candidates and, when workforce or learning capabilities are adopted, Organization and Opportunity candidates with their offering capacities preserved;
 - extract claim-level evidence, including access requirements and referral pathways;
 - assess relevance using the person's stated priorities and material constraints;
 - preserve conflicts, gaps, and time sensitivity;
@@ -242,7 +245,7 @@ Geographic matching likewise distinguishes straight-line proximity from practica
 
 ### 6.5 Provider and Service Registry
 
-The registry provides continuity of provider identity and an HSDS-compatible projection of available provider and service information.
+The registry provides continuity of provider identity and an HSDS-compatible projection of available provider and service information. When workforce or learning capabilities are adopted, the same registry responsibility supports the Organization, Organization Capacity, and Opportunity anchors defined in Domain Model sections 5, 8, and 11. An employer or learning offering does not acquire Provider status or become an HSDS Service merely by being discovered or connected. This extends the existing logical responsibility without creating a separate deployable service.
 
 Its primary functions are:
 
@@ -256,14 +259,9 @@ Its primary functions are:
 
 The registry is intentionally sparse when evidence is sparse. A record may begin with only enough information to recognize and find the provider again. A discovery event may enrich available HSDS fields as a byproduct, but enrichment does not create an obligation to maintain every field continually.
 
-#### Provider participation states
+#### Provider encounter and participation dimensions
 
-| State | Meaning | Information responsibility |
-|---|---|---|
-| Observed | Provider was discovered from one or more sources | Mesh retains evidence and uncertainty; provider has made no participation claim |
-| Re-observed | Provider was encountered again and linked to the same Provider ID | Each inquiry refreshes actionable facts; earlier observations remain historical |
-| Participating | Provider has entered a Mesh participation agreement | Provider is accountable for the information it contributes and the capabilities it expressly offers |
-| Suspended or withdrawn | Participation or access is no longer active | Historical evidence remains appropriately retained; current participation must not be implied |
+Provider encounter history and Provider Participation are independent. Encounter events record first observation, re-observation, discovery use, contact, or other interaction. Participation records the applicable agreement and its scope, with states of no participation agreement, pending, active, suspended, withdrawn, expired, or terminated, as defined by Domain Model sections 8.4–8.5. An encounter never activates, renews, suspends, or terminates participation. Identity resolution and correction remain a third independent dimension.
 
 Participation affects authority and contribution responsibility, not the provider's underlying identity or eligibility for fair discovery.
 
@@ -970,7 +968,7 @@ This architecture establishes the following durable decisions:
 7. The Mesh uses its own non-semantic Person ID with namespaced external identity links; no external domain identifier is universally canonical.
 8. Identity matching remains assurance-rated, contestable, and reversible.
 9. Natural-language interaction is governed by an explicit assistance flow and deterministic consequence gates.
-10. All AI use passes through a governed Model Gateway and cannot directly create consequential authority or facts.
+10. All AI-model processing within the Mesh application and its operational data workflows passes through the governed Model Gateway. External drafting, coding, and synthetic evaluation tools operate only under their separately approved development authority and data restrictions; they may precede the production gateway and do not authorize a bypass for Mesh operational data. AI cannot directly create consequential authority or facts.
 11. A referral is a durable record with a versioned script, secure document pointers, transport events, and evidence-based procedural disposition.
 12. External communication gaps remain unknown until appropriately reported.
 13. Collaboration is a separately chartered authorization and information compartment.
@@ -979,7 +977,7 @@ This architecture establishes the following durable decisions:
 
 ## 16. Required subordinate documents
 
-Approval of this architecture does not by itself authorize Class C implementation. The following subordinate documents are required as applicable:
+Approval of this architecture does not by itself authorize Class C implementation. Applicability follows Constitution section 9.4: active processing requires its approved controls, and inactive areas require an explicit prohibition and enforceable disabled boundary before the relevant exposure. The following subordinate documents are required as applicable:
 
 1. **Domain Model** — canonical concepts, relationships, ownership, states, invariants, and terminology.
 2. **Security and Audit** — classification, identity assurance, authentication, authorization, consent, encryption, audit, incident, retention, vendor, model, and exposure controls.
@@ -1076,11 +1074,13 @@ The following external specifications informed this architecture. Their inclusio
 ## 21. Approval record
 
 **Approval status:** Approved — Controlling System Architecture  
-**Approved version:** 0.1  
+**Approved version:** 0.2  
 **Approved by:** Judson Malone, Executive Director  
-**Approval date:** September 8, 2026  
-**Approved source SHA-256:** `33dd29aa651cbb9fcce876452c8a08c4ea6422bd680c1705e39e2bec3c17bb8e`  
+**Approval date:** September 14, 2026  
+**Prior approved artifact SHA-256:** `8deb76ab714bdf89ce0029984d58107459882f9beed310a90a7f6fff93baad8d`  
 **Canonical repository path:** `docs/SYSTEM_ARCHITECTURE.md`  
 **Canonical repository reference:** Pending canonical placement and synchronization  
 
 This approved architecture remains non-operational until byte-identical canonical placement, commit, and synchronization. It does not authorize implementation without an approved bounded implementation specification and applicable subordinate controls.
+
+The September 14, 2026 approval authorizes the specified amendments to the previously approved version. The exact revised artifact is identified by its complete-file SHA-256 in `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md`. Prior-version and amendment-proposal hashes above identify their respective source artifacts; neither is the checksum of this revised file. Canonical placement and synchronization are recorded separately.

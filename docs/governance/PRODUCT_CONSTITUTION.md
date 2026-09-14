@@ -1,18 +1,21 @@
 # Provider Mesh Product Constitution
 
 **Document ID:** PM-PC-001  
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Approved — Controlling Product Constitution  
 **Owner:** Springboard Delaware  
 **Decision authority:** Judson Malone, Executive Director  
 **Approved by:** Judson Malone, Executive Director  
-**Approval date:** September 8, 2026  
+**Approval date:** September 14, 2026  
 **Scope:** Product identity, purpose, boundaries, rights, responsibilities, and non-negotiable business rules  
 **Canonical filename:** `PRODUCT_CONSTITUTION.md`  
 **Artifact identity:** Distinct non-canonical approved artifact  
 **Canonical path required for operational effect:** `docs/governance/PRODUCT_CONSTITUTION.md`  
-**Development governance:** Springboard Software Development Governance v0.1  
-**Approved source SHA-256:** `60420b3a9223b5b254b81151f800cd83b9e0edd291354b7e82c668d14f60e43c`  
+**Development governance:** Springboard Software Development Governance v0.2  
+**Prior approved artifact SHA-256:** `51382d33f492eb9e212d3e10bd5c8ddac59313e155327bd31e46329f10bc0c41`  
+**Amendment authority:** Judson Malone, September 14, 2026 — approved corrections from PM-REVIEW-002 v0.1 (F04)  
+**Approved amendment proposal SHA-256:** `f627f867f7fc184e468b4f36154297afe2496fb37d13b501442715e9ecef3adc`  
+**Complete-artifact checksum and amendment record:** `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md` and `SHA256SUMS.txt`  
 
 > **Operational-effect notice:** This is the distinct approved artifact. It acquires operational effect when placed byte-for-byte at the canonical repository path and synchronized in accordance with Springboard Software Development Governance.
 
@@ -372,12 +375,16 @@ Before production use involving personal information, consequential referrals, p
 
 These controls may define procedures and assignments but must not weaken or redefine this Constitution.
 
+The baseline must govern every listed area before the production exposure described here. For a capability that is outside the approved stage and remains disabled, the baseline may consist of an explicit prohibition on its use and enforceable boundaries preventing activation or data flow. Detailed operating controls for that capability are required before it is enabled. All controls applicable to actual processing, including unsolicited personal information received during public discovery, must be approved and effective before that processing begins. Staging does not waive a constitutional prohibition or a control required by the active capability.
+
 ## 10. Approval record
 
 **Approval status:** Approved — Controlling Product Constitution  
-**Approved version:** 1.0  
+**Approved version:** 1.1  
 **Approved by:** Judson Malone, Executive Director  
-**Approval date:** September 8, 2026  
-**Approved source SHA-256:** `60420b3a9223b5b254b81151f800cd83b9e0edd291354b7e82c668d14f60e43c`  
+**Approval date:** September 14, 2026  
+**Prior approved artifact SHA-256:** `51382d33f492eb9e212d3e10bd5c8ddac59313e155327bd31e46329f10bc0c41`  
 **Canonical repository path:** `docs/governance/PRODUCT_CONSTITUTION.md`  
 **Canonical repository reference:** Pending canonical placement and synchronization  
+
+The September 14, 2026 approval authorizes the specified amendments to the previously approved version. The exact revised artifact is identified by its complete-file SHA-256 in `PROVIDER_MESH_AMENDMENT_REGISTER_20260914.md`. Prior-version and amendment-proposal hashes above identify their respective source artifacts; neither is the checksum of this revised file. Canonical placement and synchronization are recorded separately.
