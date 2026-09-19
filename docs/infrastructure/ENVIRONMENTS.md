@@ -104,9 +104,10 @@ The project overview lists AI Gateway (shown "Enabled" by default), Data API, Be
 | Field | Value |
 |---|---|
 | Class | Development-class (ADR-001 §6.1 rule 3) |
-| Database | Ephemeral PostgreSQL 18 service container in GitHub Actions; no persistent data; no secrets |
-| Provisioning | `scripts/provision/provision.sh --target container --environment ci` on every run, creating both databases, the four roles with grants, and a marker with `environment = ci` |
-| Instance ID | Generated per run; never recorded |
+| Database | Ephemeral PostgreSQL 18 container in GitHub Actions (`scripts/ci/start-postgres-tls.sh`); no persistent data; no secrets |
+| Transport | TLS, served with a certificate issued by a CA generated for that run; the application trusts it through `NODE_EXTRA_CA_CERTS`, which extends the runtime trust store and never disables verification, so CI exercises the same `sslmode=verify-full` path as development (Foundation 001 §5.3 rule 2, invariant 6) |
+| Provisioning | `scripts/provision/provision.sh --target container --environment ci` on every run through `scripts/ci/provision-and-export.sh`, creating both databases, the four roles with grants, and a marker with `environment = ci` |
+| Instance ID and role passwords | Generated per run by the provisioning script, exported to the job environment under the same seven `PROVIDER_MESH_*` names the application reads, masked in the job log, and discarded with the runner; never recorded |
 
 ## 3. Development-tool profile (`SEC-D08`, Foundation 001 §8, §17 decision 3)
 
@@ -140,3 +141,4 @@ Neither condition widens the permitted material in Foundation 001 §8.
 | 2026-09-19 | Development environment provisioned (project, three databases, four roles, markers); secrets entered; `SESSION_SECRET` removed; tool profile recorded | Judson Malone (console and Replit); record drafted by the implementation agent |
 | 2026-09-19 | Pending fields completed from the Neon console: §1.1 branch ID, §1.1 Postgres major version confirmed, §1.5 retention window | Values supplied by Judson Malone; recorded by the implementation agent |
 | 2026-09-19 | History window raised from 1 day to 7 days in the Neon console (Settings → Postgres → History window); §1.5 retention window updated | Judson Malone (console); recorded by the implementation agent |
+| 2026-09-19 | §2 CI environment: TLS container with a per-run CA and per-run role credentials, recorded with Foundation 001 C3 | Implementation agent |

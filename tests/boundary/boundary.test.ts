@@ -41,6 +41,10 @@ const RULES = [
   'F001-rule-2b-app-imports-modules-via-index-only',
   'F001-rule-3-platform-must-not-import-modules',
   'F001-rule-4-only-app-imports-adapters',
+];
+// Rule 5 has a resolved form (client installed) and an unresolved form (client absent).
+const RULE_5 = [
+  'F001-rule-5-sql-client-only-in-postgres-adapter-and-db',
   'F001-rule-5-sql-client-only-in-postgres-adapter-and-db-unresolved',
 ];
 
@@ -58,5 +62,9 @@ describe('Foundation 001 §4.3 boundary check (A03)', () => {
     expect(result.summary.error).toBeGreaterThan(0);
     const fired = new Set(result.summary.violations.map((v) => v.rule.name));
     for (const rule of RULES) expect(fired, `rule ${rule} should fire`).toContain(rule);
+    expect(
+      RULE_5.some((rule) => fired.has(rule)),
+      'rule 5 should fire',
+    ).toBe(true);
   });
 });

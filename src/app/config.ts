@@ -41,6 +41,13 @@ export interface InstanceConfig {
   readonly environment: Environment;
 }
 
+export interface StoreUrls {
+  /** `PROVIDER_MESH_DATABASE_URL`: the domain identity (`mesh_app`) → `provider_mesh`. */
+  readonly databaseUrl: string;
+  /** `PROVIDER_MESH_AUDIT_URL`: the audit writer (`mesh_audit_writer`) → `provider_mesh_audit`. */
+  readonly auditUrl: string;
+}
+
 export const DEFAULT_PORT = 3000;
 
 export function readRequired(env: EnvSource, name: ConfigName): string {
@@ -57,6 +64,17 @@ export function httpConfig(env: EnvSource): HttpConfig {
   const port = Number(raw);
   if (port < 1 || port > 65535) throw new ConfigError(CONFIG_NAMES.port, 'invalid');
   return { port };
+}
+
+/**
+ * The two connection strings the application reads (§5.3 rule 1). Absence of either fails
+ * startup with the variable's name. There is no fallback to any other variable.
+ */
+export function storeUrls(env: EnvSource): StoreUrls {
+  return {
+    databaseUrl: readRequired(env, CONFIG_NAMES.databaseUrl),
+    auditUrl: readRequired(env, CONFIG_NAMES.auditUrl),
+  };
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
