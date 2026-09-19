@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+var/
+package-lock.json
+docs/
+replit.md
+CLAUDE.md
+LICENSE
+attached_assets/
+scripts/provision/
+tests/boundary/fixtures/

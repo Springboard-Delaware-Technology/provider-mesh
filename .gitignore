@@ -1,1 +1,16 @@
+# Non-canonical working material (replit.md §10)
 attached_assets/
+
+# Toolchain
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local secrets are never committed; only the names in .env.example are (SEC-PLAT-03)
+.env
+.env.*
+!.env.example
+
+# Development ObjectStore adapter root (Foundation 001 §4.4); content-addressed local files
+var/

@@ -1,0 +1,43 @@
+{
+  "name": "provider-mesh",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Provider Mesh — governed discovery, responsible referrals, and authorized collaboration across the social determinants of health. Foundation 001 repository skeleton.",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "engines": {
+    "node": "24.21.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/app/main.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run tests/unit tests/contract tests/boundary",
+    "test:db": "scripts/not-yet.sh test:db C3 '§5.3–§5.9 (database-backed tests: startup assertions, isolation, audit privilege, chain verification, logging exclusion, fixture guard)'",
+    "db:migrate": "scripts/not-yet.sh db:migrate C4 '§5.4'",
+    "db:status": "scripts/not-yet.sh db:status C4 '§5.4'",
+    "db:rehearse": "scripts/not-yet.sh db:rehearse C4 '§5.4'",
+    "db:verify": "scripts/not-yet.sh db:verify C4 '§5.4'",
+    "fixtures:load": "scripts/not-yet.sh fixtures:load C9 '§5.9'",
+    "boundary:check": "depcruise --config .dependency-cruiser.cjs src db tests scripts",
+    "audit:verify": "scripts/not-yet.sh audit:verify C5 '§5.5'",
+    "check": "npm run lint && npm run typecheck && npm run boundary:check && npm run build && npm test"
+  },
+  "dependencies": {
+    "fastify": "5.12.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.10.1",
+    "dependency-cruiser": "18.3.1",
+    "eslint": "10.0.1",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.8",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "5.0.1"
+  }
+}
