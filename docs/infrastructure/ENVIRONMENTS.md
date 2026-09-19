@@ -22,8 +22,8 @@ This file records facts about environments. It contains no secret values — onl
 | Project ID | `young-queen-65824293` |
 | Region | `aws-us-east-1` (AWS US East 1, N. Virginia) — United States, per ADR-001 §7 |
 | Default branch | `production` (Neon's default branch name; it is the development environment's only branch — the Mesh environment name is `development`, carried by the instance marker) |
-| Branch ID | `br-calm-shape-av…` (full value to be completed from the Neon Overview panel) |
-| Postgres major version | 18 (selected at project creation; to be confirmed from the project Settings page and pinned here; CI uses the same major) |
+| Branch ID | `br-calm-shape-avyvl0um` |
+| Postgres major version | 18 (selected at project creation and confirmed from the project Settings page; pinned here; CI uses the same major) |
 | Encryption at rest | Provider-managed (Neon encrypts storage at rest by default); verified TLS in transit on every connection (`sslmode=verify-full`, system trust store) |
 | Endpoint host (pooled) | `ep-lively-mud-avlwhu96-pooler.c-11.us-east-1.aws.neon.tech` |
 | Created | 2026-09-19 14:43:10 (console time) by Judson Malone |
@@ -66,7 +66,7 @@ Neon's HIPAA compliance is a self-serve feature of the Scale plan, enabled first
 | Field | Value |
 |---|---|
 | Backup mechanism | Neon provider-managed continuous backup with point-in-time restore (branch-based) |
-| Retention window | The Scale plan's default history retention (value in days to be recorded from the project's Settings → Storage page) |
+| Retention window | 1 day (the project's history retention, from Settings → Storage) |
 | First restore-test plan | Before the protected-continuity gate: create a restore branch from a chosen point in time into a restricted target (a Neon branch not reachable by the application roles), verify `mesh_instance` and the migration ledger, reconcile any post-backup revocations, corrections, deletions, and credential changes (`SEC-RET-04`), record the result, then delete the restore branch. Not yet executed. |
 
 ### 1.6 Compute component (Replit workspace)
@@ -138,3 +138,4 @@ Neither condition widens the permitted material in Foundation 001 §8.
 | Date | Change | By |
 |---|---|---|
 | 2026-09-19 | Development environment provisioned (project, three databases, four roles, markers); secrets entered; `SESSION_SECRET` removed; tool profile recorded | Judson Malone (console and Replit); record drafted by the implementation agent |
+| 2026-09-19 | Pending fields completed from the Neon console: §1.1 branch ID, §1.1 Postgres major version confirmed, §1.5 retention window | Values supplied by Judson Malone; recorded by the implementation agent |
