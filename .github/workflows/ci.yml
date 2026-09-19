@@ -1,0 +1,76 @@
+# Foundation 001 §10 — continuous integration on every push and pull request.
+# CI holds no secret. The service container is the only database it touches.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: lint, typecheck, boundary, build, test, audit, secret patterns
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (frozen lockfile)
+        run: npm ci --ignore-scripts
+      - name: Lint and format
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Boundary check (§4.3)
+        run: npm run boundary:check
+      - name: Build
+        run: npm run build
+      - name: Test (unit, contract, boundary)
+        run: npm test
+      - name: Dependency audit (§10 step 6, SEC-PLAT-04)
+        run: npm audit --audit-level=high
+      - name: No platform-injected database variable (A08)
+        run: scripts/check-db-env-names.sh
+      - name: No secret pattern in the diff (§10 step 7)
+        run: scripts/check-secret-patterns.sh "${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}"
+
+  provision-dry-run:
+    name: provisioning procedure against the CI container (§6.5, A27)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Provision both databases, four roles, and a CI marker
+        run: |
+          chmod +x scripts/provision/provision.sh
+          scripts/provision/provision.sh --target container --environment ci \
+            --admin-url postgresql://postgres:postgres@localhost:5432/postgres > /dev/null
+      - name: Verify the CI marker and role attributes (read-only)
+        run: |
+          psql postgresql://postgres:postgres@localhost:5432/provider_mesh -Atc \
+            "SELECT environment FROM mesh_instance" | grep -qx ci
+          psql postgresql://postgres:postgres@localhost:5432/provider_mesh -Atc \
+            "SELECT count(*) FROM pg_roles WHERE rolname IN ('mesh_migrate','mesh_app','mesh_audit_writer','mesh_audit_reader') AND NOT rolbypassrls AND NOT rolsuper" | grep -qx 4
