@@ -66,7 +66,7 @@ Neon's HIPAA compliance is a self-serve feature of the Scale plan, enabled first
 | Field | Value |
 |---|---|
 | Backup mechanism | Neon provider-managed continuous backup with point-in-time restore (branch-based) |
-| Retention window | 1 day (the project's history retention, from Settings → Storage) |
+| Retention window | 7 days (the project's history window, raised from 1 day on 2026-09-19; Settings → Postgres → History window) |
 | First restore-test plan | Before the protected-continuity gate: create a restore branch from a chosen point in time into a restricted target (a Neon branch not reachable by the application roles), verify `mesh_instance` and the migration ledger, reconcile any post-backup revocations, corrections, deletions, and credential changes (`SEC-RET-04`), record the result, then delete the restore branch. Not yet executed. |
 
 ### 1.6 Compute component (Replit workspace)
@@ -139,3 +139,4 @@ Neither condition widens the permitted material in Foundation 001 §8.
 |---|---|---|
 | 2026-09-19 | Development environment provisioned (project, three databases, four roles, markers); secrets entered; `SESSION_SECRET` removed; tool profile recorded | Judson Malone (console and Replit); record drafted by the implementation agent |
 | 2026-09-19 | Pending fields completed from the Neon console: §1.1 branch ID, §1.1 Postgres major version confirmed, §1.5 retention window | Values supplied by Judson Malone; recorded by the implementation agent |
+| 2026-09-19 | History window raised from 1 day to 7 days in the Neon console (Settings → Postgres → History window); §1.5 retention window updated | Judson Malone (console); recorded by the implementation agent |
