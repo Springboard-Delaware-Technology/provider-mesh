@@ -8,5 +8,6 @@
 
 The HTTP server answers liveness and readiness and nothing else; a route-inventory test asserts
 that no other route is registered. Neither response carries a version string, hostname,
-configuration, or request detail. Readiness reports `foundation_incomplete` until the database
-connection (C3), migration ledger (C4), and audit sink (C5) exist.
+configuration, or request detail. Readiness re-runs the read-only startup assertions of
+`platform-operations` (database reachable, instance marker matched, migration ledger matched,
+audit store reachable and its marker matched) and reports a reason code when any fails.

@@ -45,32 +45,31 @@ jobs:
       - name: No secret pattern in the diff (§10 step 7)
         run: scripts/check-secret-patterns.sh "${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}"
 
-  provision-dry-run:
-    name: provisioning procedure against the CI container (§6.5, A27)
+  database:
+    name: provisioning dry run and database-backed tests (§6.5, §10 steps 3 and 5)
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    services:
-      postgres:
-        image: postgres:18
-        env:
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Provision both databases, four roles, and a CI marker
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (frozen lockfile)
+        run: npm ci --ignore-scripts
+      - name: Start PostgreSQL 18 with TLS (per-run CA)
+        run: scripts/ci/start-postgres-tls.sh "$RUNNER_TEMP/pg-tls" 18
+      - name: Provision both databases, four roles, and a CI marker (A27)
         run: |
           chmod +x scripts/provision/provision.sh
-          scripts/provision/provision.sh --target container --environment ci \
-            --admin-url postgresql://postgres:postgres@localhost:5432/postgres > /dev/null
+          scripts/ci/provision-and-export.sh \
+            --admin-url postgresql://postgres:postgres@localhost:5432/postgres \
+            --ca-file "$RUNNER_TEMP/pg-tls/ca.crt"
       - name: Verify the CI marker and role attributes (read-only)
         run: |
-          psql postgresql://postgres:postgres@localhost:5432/provider_mesh -Atc \
+          psql "${PM_CI_ADMIN_URL%/postgres}/provider_mesh" -Atc \
             "SELECT environment FROM mesh_instance" | grep -qx ci
-          psql postgresql://postgres:postgres@localhost:5432/provider_mesh -Atc \
+          psql "${PM_CI_ADMIN_URL%/postgres}/provider_mesh" -Atc \
             "SELECT count(*) FROM pg_roles WHERE rolname IN ('mesh_migrate','mesh_app','mesh_audit_writer','mesh_audit_reader') AND NOT rolbypassrls AND NOT rolsuper" | grep -qx 4
+      - name: Database-backed tests as the application roles (§10 step 5)
+        run: npm run test:db

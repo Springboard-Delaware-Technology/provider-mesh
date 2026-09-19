@@ -174,6 +174,9 @@ fi
 if [[ "$TARGET" == "container" ]]; then
   log "container target: environment=$ENVIRONMENT"
   ENDPOINT_HOST="$(host_of "$ADMIN_URL")"
+  # Keep a non-default port so the printed URLs reach the same server the script did.
+  ADMIN_PORT="$(echo "${ADMIN_URL%%\?*}" | sed -nE 's#^postgres(ql)?://([^@/]+@)?[^/:]+:([0-9]+).*#\3#p')"
+  [[ -n "$ADMIN_PORT" && "$ADMIN_PORT" != "5432" ]] && ENDPOINT_HOST="$ENDPOINT_HOST:$ADMIN_PORT"
   for db in provider_mesh provider_mesh_audit; do
     if [[ "$(psql "$ADMIN_URL" -Atqc "SELECT 1 FROM pg_database WHERE datname='$db'")" != "1" ]]; then
       log "creating database $db"

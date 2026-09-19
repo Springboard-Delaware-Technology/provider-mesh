@@ -8,6 +8,7 @@ export type {
   QueryResult,
   RelationalStore,
   SqlStatement,
+  TransactionOptions,
   TransactionScope,
 } from './relational-store.js';
 export type { ObjectMetadata, ObjectStore, StoredObject } from './object-store.js';

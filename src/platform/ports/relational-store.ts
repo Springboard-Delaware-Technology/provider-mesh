@@ -19,6 +19,14 @@ export interface TransactionScope {
   query<Row>(statement: SqlStatement): Promise<QueryResult<Row>>;
 }
 
+export interface TransactionOptions {
+  /**
+   * Opens the transaction `READ ONLY` so the server itself refuses any write. Startup assertions
+   * and readiness probes use this (§5.3 rule 5).
+   */
+  readonly readOnly?: boolean;
+}
+
 export interface RelationalStore {
   /**
    * Runs `work` inside one transaction. When `context` is supplied, the adapter writes the
@@ -29,6 +37,7 @@ export interface RelationalStore {
   transaction<T>(
     context: ActorContext | null,
     work: (scope: TransactionScope) => Promise<T>,
+    options?: TransactionOptions,
   ): Promise<T>;
   /** Read-only liveness probe for readiness (§5.10); issues no write. */
   ping(): Promise<void>;

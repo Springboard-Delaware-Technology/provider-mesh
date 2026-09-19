@@ -9,7 +9,9 @@
 #   - this script (the spec exempts the check itself);
 #   - docs/**, replit.md, CLAUDE.md, LICENSE: protected documents, not code (replit.md §10);
 #   - scripts/provision/**: the provisioning procedure prints the prohibition as operator
-#     guidance ("DATABASE_URL must never exist here") and reads no variable.
+#     guidance ("DATABASE_URL must never exist here") and reads no variable;
+#   - tests/contract/app/single-variable.test.ts: the A08 test itself, which must set the
+#     platform variables to prove they are ignored.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
@@ -22,7 +24,7 @@ for p in "${INCLUDE[@]}"; do [[ -e "$p" ]] && existing+=("$p"); done
 # PROVIDER_MESH_DATABASE_URL contains DATABASE_URL as a substring; require a non-word boundary.
 if hits="$(grep -rnE "(^|[^A-Za-z0-9_])(${PATTERN})" "${existing[@]}" \
       --exclude-dir=node_modules --exclude-dir=provision \
-      --exclude=check-db-env-names.sh 2>/dev/null)"; then
+      --exclude=check-db-env-names.sh --exclude=single-variable.test.ts 2>/dev/null)"; then
   echo "A08 violation: platform-injected database variable referenced:" >&2
   echo "$hits" >&2
   exit 1

@@ -7,8 +7,7 @@ export type NotReadyReason =
   | 'database_unavailable'
   | 'instance_marker_mismatch'
   | 'migration_ledger_mismatch'
-  | 'audit_sink_unavailable'
-  | 'foundation_incomplete';
+  | 'audit_sink_unavailable';
 
 export type ReadinessResult =
   { readonly ready: true } | { readonly ready: false; readonly reason: NotReadyReason };

@@ -7,7 +7,7 @@ import {
 
 const ready = (): Promise<ReadinessResult> => Promise.resolve({ ready: true });
 const notReady = (): Promise<ReadinessResult> =>
-  Promise.resolve({ ready: false, reason: 'foundation_incomplete' });
+  Promise.resolve({ ready: false, reason: 'database_unavailable' });
 
 describe('health and readiness (§5.10)', () => {
   const servers: { close(): Promise<void> }[] = [];
@@ -45,7 +45,7 @@ describe('health and readiness (§5.10)', () => {
     servers.push(app);
     const res = await app.inject({ method: 'GET', url: '/readyz' });
     expect(res.statusCode).toBe(503);
-    expect(res.json()).toEqual({ status: 'not_ready', reason: 'foundation_incomplete' });
+    expect(res.json()).toEqual({ status: 'not_ready', reason: 'database_unavailable' });
   });
 
   it('a probe failure is a not-ready without detail, never a stack', async () => {
