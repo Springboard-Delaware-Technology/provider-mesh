@@ -1,6 +1,9 @@
 # Non-canonical working material (replit.md §10)
 attached_assets/
 
+# Replit-managed Agent skill templates are workspace-local, not repository content.
+.local/
+
 # Toolchain
 node_modules/
 dist/
