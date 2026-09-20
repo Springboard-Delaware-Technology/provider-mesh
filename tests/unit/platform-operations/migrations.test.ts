@@ -1,4 +1,4 @@
-import { mkdtemp, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -7,15 +7,19 @@ import { describe, expect, it } from 'vitest';
 import {
   compareIdentity,
   compareLedger,
+  describeLedger,
   loadCompiledMigrationSet,
+  loadCompiledMigrationSets,
   MigrationSetError,
   type InstanceMarker,
 } from '../../../src/modules/platform-operations/index.js';
 
 async function tempDir(files: Record<string, string>): Promise<string> {
   const dir = await mkdtemp(path.join(tmpdir(), 'pm-migrations-'));
-  for (const [name, content] of Object.entries(files))
+  for (const [name, content] of Object.entries(files)) {
+    await mkdir(path.dirname(path.join(dir, name)), { recursive: true });
     await writeFile(path.join(dir, name), content);
+  }
   return dir;
 }
 
@@ -41,8 +45,31 @@ describe('compiled migration set (§5.3 rule 4, §5.4)', () => {
     ).rejects.toThrow(/duplicate/);
   });
 
-  it('the repository migration directory is loadable', async () => {
-    await expect(loadCompiledMigrationSet(path.resolve('db/migrations'))).resolves.toBeDefined();
+  it('loads one set per database from <root>/domain and <root>/audit', async () => {
+    const root = await tempDir({
+      'domain/0001_a.sql': 'select 1;',
+      'domain/0002_b.sql': 'select 2;',
+      'audit/0001_z.sql': 'select 3;',
+    });
+    const sets = await loadCompiledMigrationSets(root);
+    expect(sets.domain.map((m) => m.filename)).toEqual(['0001_a.sql', '0002_b.sql']);
+    expect(sets.audit.map((m) => m.filename)).toEqual(['0001_z.sql']);
+  });
+
+  it('fails when either set directory is absent', async () => {
+    await expect(
+      loadCompiledMigrationSets(await tempDir({ 'domain/0001_a.sql': '' })),
+    ).rejects.toThrow(/audit/);
+    await expect(
+      loadCompiledMigrationSets(await tempDir({ 'audit/0001_a.sql': '' })),
+    ).rejects.toThrow(/domain/);
+  });
+
+  it('the repository migration sets are loadable and begin with the ledger migration', async () => {
+    const sets = await loadCompiledMigrationSets(path.resolve('db/migrations'));
+    expect(sets.domain[0]?.filename).toBe('0001_migration_ledger.sql');
+    expect(sets.audit[0]?.filename).toBe('0001_migration_ledger.sql');
+    expect(sets.domain[0]?.sha256).not.toBe(sets.audit[0]?.sha256);
   });
 });
 
@@ -83,6 +110,60 @@ describe('ledger comparison', () => {
         entries: [...compiled, { filename: '0003_c.sql', sha256: 'cc' }],
       }),
     ).toMatchObject({ problem: 'unknown_applied', filename: '0003_c.sql' });
+  });
+  it('reports the first problem in filename order, a mismatch before a later pending file', () => {
+    expect(
+      compareLedger(compiled, {
+        present: true,
+        entries: [{ filename: '0001_a.sql', sha256: 'xx' }],
+      }),
+    ).toMatchObject({ problem: 'hash_mismatch', filename: '0001_a.sql' });
+  });
+});
+
+describe('ledger report for db:status (§5.4)', () => {
+  const compiled = [
+    { filename: '0001_a.sql', sha256: 'aa' },
+    { filename: '0002_b.sql', sha256: 'bb' },
+    { filename: '0003_c.sql', sha256: 'cc' },
+  ];
+  it('treats an absent ledger as everything pending', () => {
+    expect(describeLedger(compiled, { present: false })).toEqual({
+      present: false,
+      applied: [],
+      pending: compiled,
+      mismatched: [],
+      unknown: [],
+    });
+  });
+  it('lists every applied, pending, mismatched, and unknown entry at once', () => {
+    const report = describeLedger(compiled, {
+      present: true,
+      entries: [
+        { filename: '0001_a.sql', sha256: 'aa' },
+        { filename: '0002_b.sql', sha256: 'zz' },
+        { filename: '0009_z.sql', sha256: '99' },
+        { filename: '0004_d.sql', sha256: '44' },
+      ],
+    });
+    expect(report).toEqual({
+      present: true,
+      applied: [{ filename: '0001_a.sql', sha256: 'aa' }],
+      pending: [{ filename: '0003_c.sql', sha256: 'cc' }],
+      mismatched: [{ filename: '0002_b.sql', compiledSha256: 'bb', ledgerSha256: 'zz' }],
+      unknown: [
+        { filename: '0004_d.sql', sha256: '44' },
+        { filename: '0009_z.sql', sha256: '99' },
+      ],
+    });
+  });
+  it('is at head when the ledger holds exactly the set', () => {
+    expect(describeLedger(compiled, { present: true, entries: compiled })).toMatchObject({
+      applied: compiled,
+      pending: [],
+      mismatched: [],
+      unknown: [],
+    });
   });
 });
 

@@ -4,6 +4,7 @@ import {
   runStartupAssertions,
   StartupAssertionError,
 } from '../../../src/modules/platform-operations/index.js';
+import type { CompiledMigrationSets } from '../../../src/modules/platform-operations/index.js';
 import type {
   QueryResult,
   RelationalStore,
@@ -79,11 +80,9 @@ function good(role: 'domain' | 'audit'): FakeState {
 
 const expected = { instanceId: INSTANCE, environment: 'ci' };
 
-async function run(
-  domain: FakeState,
-  audit: FakeState,
-  compiled: { filename: string; sha256: string }[] = [],
-) {
+const NONE: CompiledMigrationSets = { domain: [], audit: [] };
+
+async function run(domain: FakeState, audit: FakeState, compiled: CompiledMigrationSets = NONE) {
   const log: SqlStatement[] = [];
   const outcome = await runStartupAssertions({
     domain: fakeStore(domain, log),
@@ -101,7 +100,11 @@ describe('startup assertions (§5.3 rules 3–5, §5.5 rule 5, A09)', () => {
   it('pass when both markers match and the ledger matches the compiled set', async () => {
     const { report, error } = await run(good('domain'), good('audit'));
     expect(error).toBeNull();
-    expect(report).toEqual({ instanceId: INSTANCE, environment: 'ci', appliedMigrations: 0 });
+    expect(report).toEqual({
+      instanceId: INSTANCE,
+      environment: 'ci',
+      appliedMigrations: { domain: 0, audit: 0 },
+    });
   });
 
   it('issue no write statement and open only READ ONLY transactions', async () => {
@@ -163,8 +166,8 @@ describe('startup assertions (§5.3 rules 3–5, §5.5 rule 5, A09)', () => {
     expect((error as Error).message).toBe(`startup assertion failed: ${code}`);
   });
 
-  it('fail on a ledger that differs from the compiled set', async () => {
-    const compiled = [{ filename: '0001_a.sql', sha256: 'aa' }];
+  it('fail on a domain ledger that differs from the compiled domain set', async () => {
+    const compiled = { domain: [{ filename: '0001_a.sql', sha256: 'aa' }], audit: [] };
     expect((await run(good('domain'), good('audit'), compiled)).error).toMatchObject({
       code: 'migration_ledger_mismatch',
     });
@@ -172,9 +175,46 @@ describe('startup assertions (§5.3 rules 3–5, §5.5 rule 5, A09)', () => {
     expect((await run(applied, good('audit'), compiled)).error).toMatchObject({
       code: 'migration_ledger_mismatch',
     });
-    const matching = { ...good('domain'), ledger: compiled };
+    const matching = { ...good('domain'), ledger: compiled.domain };
     expect((await run(matching, good('audit'), compiled)).report).toMatchObject({
-      appliedMigrations: 1,
+      appliedMigrations: { domain: 1, audit: 0 },
     });
+  });
+
+  it('fail on an audit ledger that differs from the compiled audit set (§5.4: one ledger per database)', async () => {
+    const compiled = {
+      domain: [{ filename: '0001_a.sql', sha256: 'aa' }],
+      audit: [{ filename: '0001_z.sql', sha256: 'zz' }],
+    };
+    const domain = { ...good('domain'), ledger: compiled.domain };
+    expect((await run(domain, good('audit'), compiled)).error).toMatchObject({
+      code: 'migration_ledger_mismatch',
+    });
+    const stale = { ...good('audit'), ledger: [{ filename: '0001_z.sql', sha256: 'old' }] };
+    expect((await run(domain, stale, compiled)).error).toMatchObject({
+      code: 'migration_ledger_mismatch',
+    });
+    const matching = { ...good('audit'), ledger: compiled.audit };
+    expect((await run(domain, matching, compiled)).report).toEqual({
+      instanceId: INSTANCE,
+      environment: 'ci',
+      appliedMigrations: { domain: 1, audit: 1 },
+    });
+  });
+
+  it('read the audit ledger only in a READ ONLY transaction, after the audit marker', async () => {
+    const compiled = {
+      domain: [{ filename: '0001_a.sql', sha256: 'aa' }],
+      audit: [{ filename: '0001_z.sql', sha256: 'zz' }],
+    };
+    const { log, error } = await run(
+      { ...good('domain'), ledger: compiled.domain },
+      { ...good('audit'), ledger: compiled.audit },
+      compiled,
+    );
+    expect(error).toBeNull();
+    const ledgerReads = log.filter((s) => s.text.startsWith('SELECT filename'));
+    expect(ledgerReads).toHaveLength(2);
+    expect(log.filter((s) => s.text === 'BEGIN')).toHaveLength(0);
   });
 });

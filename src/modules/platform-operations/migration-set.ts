@@ -3,13 +3,23 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 /**
- * The migration set compiled into this release (Foundation 001 §5.3 rule 4, §5.4): every
- * `NNNN_<name>.sql` under `db/migrations`, in filename order, with the SHA-256 of its bytes.
- * The migration mechanism (C4) applies and records the same set; startup compares the two.
+ * The migration sets compiled into this release (Foundation 001 §5.3 rule 4, §5.4): every
+ * `NNNN_<name>.sql` under `db/migrations/<target>`, in filename order, with the SHA-256 of its
+ * bytes. There is one ledger per database and therefore one set per database (§5.4: "in each
+ * database"). The migration mechanism (`db/ledger`) applies and records the same sets; startup
+ * compares each ledger with its set.
  */
 export interface CompiledMigration {
   readonly filename: string;
   readonly sha256: string;
+}
+
+export const MIGRATION_TARGETS = ['domain', 'audit'] as const;
+export type MigrationTarget = (typeof MIGRATION_TARGETS)[number];
+
+export interface CompiledMigrationSets {
+  readonly domain: readonly CompiledMigration[];
+  readonly audit: readonly CompiledMigration[];
 }
 
 export const MIGRATION_FILENAME = /^\d{4}_[a-z0-9_]+\.sql$/;
@@ -28,7 +38,7 @@ export async function loadCompiledMigrationSet(
   try {
     entries = await readdir(directory);
   } catch {
-    throw new MigrationSetError('migration directory is not readable');
+    throw new MigrationSetError(`migration directory is not readable: ${path.basename(directory)}`);
   }
   const sqlFiles = entries.filter((name) => name.endsWith('.sql')).sort();
   const set: CompiledMigration[] = [];
@@ -42,4 +52,12 @@ export async function loadCompiledMigrationSet(
   const prefixes = new Set(set.map((m) => m.filename.slice(0, 4)));
   if (prefixes.size !== set.length) throw new MigrationSetError('duplicate migration number');
   return set;
+}
+
+/** Loads `<root>/domain` and `<root>/audit`; either directory being unreadable is an error. */
+export async function loadCompiledMigrationSets(root: string): Promise<CompiledMigrationSets> {
+  return {
+    domain: await loadCompiledMigrationSet(path.join(root, 'domain')),
+    audit: await loadCompiledMigrationSet(path.join(root, 'audit')),
+  };
 }
