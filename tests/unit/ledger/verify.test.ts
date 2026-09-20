@@ -67,7 +67,19 @@ const facets: CatalogFacets = {
       enabled: 'O',
     },
   ],
-  functions: [],
+  functions: [
+    {
+      name: 'migration_ledger_immutable',
+      arguments: '',
+      owner: 'mesh_migrate',
+      language: 'plpgsql',
+      kind: 'f',
+      security_definer: false,
+      volatility: 'v',
+      returns: 'trigger',
+      definition: null,
+    },
+  ],
   function_grants: [],
   sequences: [],
   types: [],
@@ -119,8 +131,11 @@ describe('db:verify evaluation (§5.4, Governance §12.4)', () => {
       'ledger.applied_by',
       'catalog.checksum',
       'tables.exact',
+      'views.exact',
       'policies.exact',
       'triggers.exact',
+      'functions.exact',
+      'functions.migration_ledger_immutable',
       'roles.mesh_migrate',
       'roles.mesh_app',
       'roles.mesh_audit_writer',
@@ -211,6 +226,47 @@ describe('db:verify evaluation (§5.4, Governance §12.4)', () => {
     expect(failing(evaluateCatalog(policy, expected, compiled))).toEqual(['policies.exact']);
     const noTrigger = observed({}, { triggers: [] });
     expect(failing(evaluateCatalog(noTrigger, expected, compiled))).toEqual(['triggers.exact']);
+  });
+
+  it('fails on an unexpected or missing view, and on a function that is missing, re-owned, or made SECURITY DEFINER', () => {
+    const view = observed(
+      {},
+      { relations: [...facets.relations, { ...relation('stray_view'), kind: 'v' }] },
+    );
+    expect(failing(evaluateCatalog(view, expected, compiled))).toEqual(['views.exact']);
+    const missingView = { ...expected, views: ['audit_chain_head'] };
+    expect(failing(evaluateCatalog(observed(), missingView, compiled))).toEqual(['views.exact']);
+    const noFunction = observed({}, { functions: [] });
+    expect(failing(evaluateCatalog(noFunction, expected, compiled))).toEqual([
+      'functions.exact',
+      'functions.migration_ledger_immutable',
+    ]);
+    const definer = observed(
+      {},
+      { functions: facets.functions.map((f) => ({ ...f, security_definer: true })) },
+    );
+    const report = evaluateCatalog(definer, expected, compiled);
+    expect(failing(report)).toEqual(['functions.migration_ledger_immutable']);
+    expect(
+      report.checks.find((c) => c.name === 'functions.migration_ledger_immutable')?.detail,
+    ).toBe('unexpected: security definer true');
+    const reowned = observed(
+      {},
+      { functions: facets.functions.map((f) => ({ ...f, owner: 'postgres' })) },
+    );
+    expect(failing(evaluateCatalog(reowned, expected, compiled))).toEqual([
+      'functions.migration_ledger_immutable',
+    ]);
+    const extra = observed(
+      {},
+      {
+        functions: [
+          ...facets.functions,
+          ...facets.functions.map((f) => ({ ...f, name: 'stray_fn' })),
+        ],
+      },
+    );
+    expect(failing(evaluateCatalog(extra, expected, compiled))).toEqual(['functions.exact']);
   });
 
   it('fails when a role gains a privileged attribute or loses login', () => {

@@ -29,5 +29,13 @@ Rules for every file:
 `0001_migration_ledger.sql` in each directory verifies what provisioning (§6.5) created — the four
 roles without privileged attributes, the connect grants, the single `mesh_instance` row with the
 right `database_role` — and then creates `migration_ledger` with its immutability trigger and
-SELECT-only grants. Later capabilities add the audit schema (C5, §5.5), the outbox and job tables
-(C7, §5.7), and the first compartmented table (C6, §5.6) as further files.
+SELECT-only grants.
+
+`audit/0002_audit_event.sql` (C5, §5.5) creates `audit_event` with the `SEC-AUD-02` field groups
+and a paired `<column>_absent` reason for every nullable column, the value domains, canonical
+serialization version 1 (`audit_event_canonical`, `audit_event_hash`), the `SECURITY DEFINER`
+chain trigger that assigns `sequence`, `prev_hash`, `hash`, and `recorded_at` under an advisory
+lock, the append-only trigger, the `audit_chain_head` view, and the grants that leave the writer
+with `INSERT` and the head view only. The file documents the serialization; `src/modules/audit`
+mirrors it. Later capabilities add the outbox and job tables (C7, §5.7) and the first
+compartmented table (C6, §5.6) as further files.

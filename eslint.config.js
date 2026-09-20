@@ -52,8 +52,9 @@ export default tseslint.config(
   },
   {
     // The composition root (until the structured logger of C8, §5.8 exists) and the migration
-    // command line (whose report is its output) are the only places that write to the console.
-    files: ['src/app/main.ts', 'db/ledger/cli.ts'],
+    // and audit command lines (whose reports are their output) are the only places that write
+    // to the console.
+    files: ['src/app/main.ts', 'db/ledger/cli.ts', 'db/audit/cli.ts'],
     rules: { 'no-console': 'off' },
   },
   prettier,

@@ -22,7 +22,8 @@
     "db:verify": "tsx db/ledger/cli.ts verify",
     "fixtures:load": "scripts/not-yet.sh fixtures:load C9 '§5.9'",
     "boundary:check": "depcruise --config .dependency-cruiser.cjs src db tests scripts",
-    "audit:verify": "scripts/not-yet.sh audit:verify C5 '§5.5'",
+    "audit:verify": "tsx db/audit/cli.ts verify",
+    "audit:checkpoint": "tsx db/audit/cli.ts checkpoint",
     "check": "npm run lint && npm run typecheck && npm run boundary:check && npm run build && npm test"
   },
   "dependencies": {

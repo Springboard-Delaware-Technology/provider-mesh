@@ -11,8 +11,8 @@ import { MIGRATION_ROLE } from './runner.js';
 
 /**
  * `db:verify` (Foundation 001 §5.4; Governance §12.4): after application, confirm the ledger
- * hashes, the catalog state (expected tables, roles, policies, triggers, grants, forced
- * row-level-security flags), the row counts on reference tables, and that the catalog checksum
+ * hashes, the catalog state (expected tables, views, functions, roles, policies, triggers,
+ * grants, forced row-level-security flags), the row counts on reference tables, and that the catalog checksum
  * recorded at the ledger head is the catalog's checksum now. Observation is one set of reads
  * in the caller's transaction; evaluation is pure, so the checks are unit-testable.
  */
@@ -140,6 +140,11 @@ export function evaluateCatalog(
   const tableDiff = setDifference(expected.tables, tables);
   check('tables.exact', tableDiff === '', tableDiff === '' ? tables.join(', ') : tableDiff);
 
+  // Views: exactly the expected set (C5: the audit chain head, §5.5).
+  const views = observed.facets.relations.filter((r) => r.kind === 'v').map((r) => r.name);
+  const viewDiff = setDifference(expected.views, views);
+  check('views.exact', viewDiff === '', viewDiff === '' ? views.join(', ') || 'none' : viewDiff);
+
   // Row-level security flags on every protected table (§5.6 rule 1, A12).
   for (const table of expected.protectedTables) {
     const relation = observed.facets.relations.find((r) => r.name === table);
@@ -173,6 +178,36 @@ export function evaluateCatalog(
     triggerDiff === '' ? `${String(expected.triggers.length)} trigger(s)` : triggerDiff,
   );
 
+  // Functions: exactly the expected set, each with its owner and definer flag (§5.5 rule 1:
+  // the chain trigger's function is SECURITY DEFINER and owned by mesh_migrate; nothing else is).
+  const functionDiff = setDifference(
+    expected.functions.map((f) => f.name),
+    observed.facets.functions.map((f) => f.name),
+  );
+  check(
+    'functions.exact',
+    functionDiff === '',
+    functionDiff === '' ? `${String(expected.functions.length)} function(s)` : functionDiff,
+  );
+  for (const fn of expected.functions) {
+    const row = observed.facets.functions.find((f) => f.name === fn.name);
+    const problems: string[] = [];
+    if (row === undefined) problems.push('absent');
+    else {
+      if (row.owner !== fn.owner) problems.push(`owner ${row.owner}`);
+      if (row.security_definer !== fn.securityDefiner) {
+        problems.push(`security definer ${String(row.security_definer)}`);
+      }
+    }
+    check(
+      `functions.${fn.name}`,
+      problems.length === 0,
+      problems.length === 0
+        ? `owner ${fn.owner}, security definer ${String(fn.securityDefiner)}`
+        : `unexpected: ${problems.join(', ')}`,
+    );
+  }
+
   // Role attributes (§5.2; A12: NOBYPASSRLS).
   for (const role of expected.roles) {
     const row = observed.facets.roles.find((r) => r.name === role.name);
@@ -193,8 +228,9 @@ export function evaluateCatalog(
     );
   }
 
-  // Grants: every non-owner grantee on every expected table holds exactly what is expected.
-  for (const table of expected.tables) {
+  // Grants: every non-owner grantee on every expected table and view holds exactly what is
+  // expected.
+  for (const table of [...expected.tables, ...expected.views]) {
     const owner = observed.facets.relations.find((r) => r.name === table)?.owner;
     const byGrantee = new Map<string, string[]>();
     for (const grant of observed.facets.relation_grants) {

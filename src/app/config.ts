@@ -4,6 +4,8 @@
  * The application reads only Springboard-named variables. Platform-injected database variables
  * are never read; `scripts/check-db-env-names.sh` enforces that repository-wide.
  */
+import path from 'node:path';
+
 export const CONFIG_NAMES = {
   instanceId: 'PROVIDER_MESH_INSTANCE_ID',
   environment: 'PROVIDER_MESH_ENVIRONMENT',
@@ -49,6 +51,13 @@ export interface StoreUrls {
 }
 
 export const DEFAULT_PORT = 3000;
+
+/**
+ * Root of the development `ObjectStore` adapter (§4.4): a git-ignored directory under the
+ * repository (`var/`, §1.7). Fixed rather than configured, so no request or variable can point
+ * the store elsewhere; tests pass their own root explicitly.
+ */
+export const DEFAULT_OBJECT_STORE_ROOT = path.resolve(process.cwd(), 'var', 'object-store');
 
 export function readRequired(env: EnvSource, name: ConfigName): string {
   const value = env[name];

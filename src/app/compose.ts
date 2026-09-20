@@ -6,6 +6,7 @@
 import path from 'node:path';
 
 import type { ReadinessProbe, ReadinessResult } from '../modules/access-gateway/index.js';
+import { AuditService } from '../modules/audit/index.js';
 import {
   loadCompiledMigrationSets,
   runStartupAssertions,
@@ -13,16 +14,18 @@ import {
   type CompiledMigrationSets,
   type StartupReport,
 } from '../modules/platform-operations/index.js';
+import { FilesystemObjectStore } from '../platform/adapters/dev/index.js';
 import {
   buildConnectionConfig,
   PostgresRelationalStore,
   type StatementObserver,
   type StoreConnectionConfig,
 } from '../platform/adapters/postgres/index.js';
-import type { RelationalStore } from '../platform/ports/index.js';
+import type { AuditSink, RelationalStore } from '../platform/ports/index.js';
 
 import {
   CONFIG_NAMES,
+  DEFAULT_OBJECT_STORE_ROOT,
   instanceConfig,
   storeUrls,
   type EnvSource,
@@ -68,6 +71,11 @@ export interface Application {
   readonly instance: InstanceConfig;
   readonly stores: Stores;
   readonly compiledMigrations: CompiledMigrationSets;
+  /**
+   * The Audit Service over the audit-writer connection (§5.2, §5.5): the only object that
+   * receives that connection for writing; startup assertions use it read-only.
+   */
+  readonly audit: AuditSink;
   /** Runs the §5.3 assertions once; throws `StartupAssertionError` with a code on failure. */
   assertStartup(): Promise<StartupReport>;
   /** Re-runs the same read-only assertions for `/readyz` (§5.10); never throws. */
@@ -76,7 +84,11 @@ export interface Application {
 
 export async function composeApplication(
   env: EnvSource,
-  options: { readonly migrationsRoot?: string; readonly observe?: StatementObserver } = {},
+  options: {
+    readonly migrationsRoot?: string;
+    readonly objectStoreRoot?: string;
+    readonly observe?: StatementObserver;
+  } = {},
 ): Promise<Application> {
   const instance = instanceConfig(env);
   const configs = storeConfigs(env);
@@ -84,6 +96,8 @@ export async function composeApplication(
     options.migrationsRoot ?? DEFAULT_MIGRATIONS_ROOT,
   );
   const stores = createStores(configs, options.observe);
+  const objects = new FilesystemObjectStore(options.objectStoreRoot ?? DEFAULT_OBJECT_STORE_ROOT);
+  const audit = new AuditService(stores.audit, objects, instance);
 
   const assertStartup = (): Promise<StartupReport> =>
     runStartupAssertions({
@@ -103,5 +117,5 @@ export async function composeApplication(
     }
   };
 
-  return { instance, stores, compiledMigrations, assertStartup, readiness };
+  return { instance, stores, compiledMigrations, audit, assertStartup, readiness };
 }

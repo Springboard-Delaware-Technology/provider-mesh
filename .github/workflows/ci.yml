@@ -81,3 +81,9 @@ jobs:
         run: npm run db:verify
       - name: Database-backed tests as the application roles (§10 step 5)
         run: npm run test:db
+      - name: Verify the audit chain as mesh_audit_reader (§5.5 rule 3, A14)
+        run: npm run audit:verify
+      - name: Export a checkpoint through the object-store port, then verify the chain against it (§5.5 rule 4, A15)
+        run: |
+          npm run audit:checkpoint -- --identity ci:checkpoint
+          npm run audit:verify

@@ -17,11 +17,15 @@ export type { SecretStore } from './secret-store.js';
 export type { ClaimedJob, JobQueue, JobRequest } from './job-queue.js';
 export type { IndexDocument, SearchHit, SearchIndex } from './search-index.js';
 export type {
+  Absent,
+  AbsenceReason,
+  AuditActorKind,
   AuditCheckpoint,
   AuditEventInput,
   AuditResult,
   AuditSink,
   ChainHead,
+  Maybe,
 } from './audit-sink.js';
 export type {
   HttpMethod,
