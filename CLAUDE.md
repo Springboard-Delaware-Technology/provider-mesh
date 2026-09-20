@@ -3,8 +3,8 @@
 | Document control | Value |
 |---|---|
 | Document ID | PM-CCA-001 |
-| Version | 0.1-DRAFT |
-| Status | Review artifact — not canonical, not approved |
+| Version | 0.1-DRAFT, draft revision 2 (amended September 20, 2026) |
+| Status | Review artifact — not canonical, not approved; revision 2 adds the Git route (§7) and the C4/C5 Max-category triggers (§5), at the decision authority's instruction of September 20, 2026 |
 | Owner | Springboard Delaware |
 | Human decision authority | Judson Malone, Executive Director |
 | Canonical path required for operational effect | `CLAUDE.md` at the repository root |
@@ -65,6 +65,8 @@ Max-effort categories:
 6. Reconciling any proposed change against the cross-domain invariants (Domain Model §22) when the change touches more than one bounded module.
 7. Drafting an ADR, a bounded implementation specification, or a profile (HSDS, terminology, workforce, health).
 8. Any case where controlling documents appear to conflict, or where the correct work class is unclear.
+9. Changing the migration set or the migration mechanism (Foundation 001 C4, §5.4): a new migration file, a change to the ledger table, the catalog-checksum serialization, or the expected catalog that `db:verify` checks.
+10. Designing or changing the audit hash chain (Foundation 001 C5, §5.5): the `audit_event` contract, the chain trigger and its canonical serialization, `audit:verify`, or the checkpoint export.
 
 Everything else proceeds at the current setting without comment: routine repair, single-module changes inside an approved boundary, tests, refactors, documentation updates, commit messages, read-only diagnostics.
 
@@ -74,6 +76,16 @@ If a task that began as routine turns out to require a Max category (for example
 
 Follow `replit.md` and Governance §§10–13 without exception. In particular: no push authority is implied by this file; commits carry the attribution the session is configured to add; approved artifacts are never edited in place — a proposed revision is a new review artifact with its own checksum.
 
-## 7. Amendment
+## 7. Git route
 
-This file is amended only by a new approved version placed at the canonical path. Session-level requests to behave differently apply to that session only and do not amend this file.
+The route is Foundation 001 §9 as practised in this repository; `replit.md` §8 controls where the two differ.
+
+- Begin every task with `git fetch origin` and `git checkout -B f001/<capability> origin/main`: one new branch per capability, always from the freshly fetched controlling branch. Report the preflight of `replit.md` §8.1.
+- Never rebase, amend a pushed commit, or force-push, even with a lease (`replit.md` §8.3, line 169: do not rewrite history or force-push). A conflict with `main` is resolved by merging `origin/main` into the branch.
+- Never push to a branch that was deleted after its merge. A merged pull request is finished; follow-up work is a new branch from `origin/main` under a new name.
+- Push only to `f001/*` branches (Foundation 001 §9 rule 2). Open no pull request and merge nothing unless the task says so; the decision authority merges.
+- After every push, verify with a fresh fetch (zero ahead/behind against the pushed branch, clean working tree) and report the SHA.
+
+## 8. Amendment
+
+This file is amended only by a new approved version placed at the canonical path. Session-level requests to behave differently apply to that session only and do not amend this file. While it remains a draft, revisions are recorded in the document-control table with their date and the instruction they follow.
