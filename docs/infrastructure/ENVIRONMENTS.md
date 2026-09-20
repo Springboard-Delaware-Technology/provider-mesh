@@ -78,6 +78,8 @@ Neon's HIPAA compliance is a self-serve feature of the Scale plan, enabled first
 | Automatically provisioned database | None. Because nothing has been published, Replit has not provisioned a database; `DATABASE_URL`, `PGHOST`, `PGDATABASE`, `PGUSER`, and `PGPASSWORD` are absent from the workspace (verified from the Secrets panel, September 19, 2026). This is the available evidence for ADR-001 §6.3 rule 8's verified-unused control until a publication occurs, at which point the release record carries the verification |
 | Secrets visibility | Replit shows that secrets are accessible to anyone with access to the App. The workspace has one collaborator (the decision authority). This is one reason the compute component requires its own full-profile assessment before protected data (ADR-001 §6.5) |
 | Pre-existing secret removed | `SESSION_SECRET`, created automatically by Replit at workspace creation and unused by the repository, was deleted on September 19, 2026 so that the secret list matches the specification exactly |
+| Node.js runtime | The `.replit` module `nodejs-24` (module name confirmed) resolved to Node v24.13.0 / npm 11.6.2 in the workspace on 2026-09-20. `.nvmrc` stays at 24.21.0, which CI installs. Because the workspace cannot pin the patch version the module supplies, `package.json` `engines.node` is relaxed from the exact `24.21.0` to the 24 line (`>=24.13.0 <25`) so the workspace and CI both satisfy it; this is a bounded runtime exception under Governance §15 to Foundation 001 §4.1's exact `engines` pin, recorded here by the decision authority's instruction, and it ends when the workspace module supplies the pinned version or the pin is revised |
+| Workspace pull procedure | Replit rewrites `.replit` locally when the workspace is opened, so a plain pull reports a local modification. Every pull from the workspace is therefore `git checkout -- .replit` followed by `git pull origin main`. The committed `.replit` remains the canonical one (Foundation 001 §1.7, A26) |
 
 ### 1.7 Secrets held (names only)
 
@@ -100,7 +102,9 @@ All five URLs carry `?sslmode=verify-full&sslrootcert=system` and the pooled end
 | Field | Value |
 |---|---|
 | Mechanism | `db/ledger` (Foundation 001 C4, §5.4): `db:migrate`, `db:status`, `db:rehearse`, `db:verify`, run as `mesh_migrate` through `PROVIDER_MESH_MIGRATE_URL` and `PROVIDER_MESH_AUDIT_MIGRATE_URL` from the Replit workspace; only `db:migrate` writes `migration_ledger` |
-| Development ledger state | **Not yet migrated.** The C4 branch was implemented and verified against a local and a CI database only; no agent session holds the development secrets. Before the application is started against this project, the decision authority (or a Replit session holding the secrets) runs `npm run db:rehearse && npm run db:migrate && npm run db:status && npm run db:verify` in the workspace and records the date and the `db:status` output here. Until then, startup and `/readyz` report `migration_ledger_mismatch` against this project, by design (§5.3 rule 4) |
+| Development ledger state | **At head.** Migrated 2026-09-20 by Judson Malone from the Replit workspace via `npm run db:rehearse`, `npm run db:migrate`, `npm run db:status`, `npm run db:verify` (rehearsal rolled back cleanly; status at head with zero pending and zero mismatches; `db:verify` 15 checks passed on each store). The application then started with `migrations=domain:1,audit:1` |
+| Domain ledger (`provider_mesh`) | `0001_migration_ledger.sql` — sha256 `4118262f41822b77e7b72b22a5871f321a17a6b9d9ddf41e6f65b178e6da19de`; applied 2026-09-20 14:06:00 UTC by `mesh_migrate`; catalog `a837cb1d557f46fff985666f053ddbb9e4bc8fefebbef03416151480fed88988` |
+| Audit ledger (`provider_mesh_audit`) | `0001_migration_ledger.sql` — sha256 `57243df4fc0a0cf8a054c49050b088a83452cc787aea0ec88ded378db23390ea`; applied 2026-09-20 14:06:02 UTC by `mesh_migrate`; catalog `e3dd18e560f0f1b00ec228611873e81a0de5d33706c898cca8241ce6e3977b7e` |
 | First migration set | `db/migrations/domain/0001_migration_ledger.sql` and `db/migrations/audit/0001_migration_ledger.sql`: each verifies the four roles, the connect grants, and the single `mesh_instance` row for its database role, then creates `migration_ledger` with an immutability trigger and SELECT-only grants for the application identities |
 
 ### 1.9 Neon features present and unused
@@ -143,7 +147,17 @@ Neither condition widens the permitted material in Foundation 001 §8.
 | Full-profile assessment of the compute component | Not performed | Protected-continuity gate (ADR-001 §6.5) |
 | HIPAA enablement on the Neon project | Not enabled | Protected-continuity gate (ADR-001 §6.3 rule 7) |
 
-## 5. Change log
+## 5. Source control
+
+| Field | Value |
+|---|---|
+| Repository | `Springboard-Delaware-Technology/provider-mesh`; `main` is the controlling branch (`replit.md` §1, §8.1) |
+| `main` branch protection | Set 2026-09-20 by the decision authority: pull request required; no required approvals; force pushes disallowed; deletions disallowed; administrator bypass retained for the direct-to-`main` canonical document route (`replit.md` §8.2–§8.4; Foundation 001 §9 rule 1) |
+| Claude Code push authority | Verified 2026-09-19: the credential can push to `f001/*` branches only and can create but not delete branches (Foundation 001 §9 rule 2) |
+| Commit attribution | Commits by Claude Code are authored `Claude <noreply@anthropic.com>` and carry a `Co-Authored-By` trailer naming the model and a `Claude-Session` trailer naming the session (`CLAUDE.md` §6) |
+| Feature branches | One new branch per capability, `f001/<capability>`, created from a freshly fetched `origin/main`; never rebased or force-pushed; a branch deleted after its merge is never pushed to again (`CLAUDE.md` §7) |
+
+## 6. Change log
 
 | Date | Change | By |
 |---|---|---|
@@ -152,3 +166,5 @@ Neither condition widens the permitted material in Foundation 001 §8.
 | 2026-09-19 | History window raised from 1 day to 7 days in the Neon console (Settings → Postgres → History window); §1.5 retention window updated | Judson Malone (console); recorded by the implementation agent |
 | 2026-09-19 | §2 CI environment: TLS container with a per-run CA and per-run role credentials, recorded with Foundation 001 C3 | Implementation agent |
 | 2026-09-20 | §1.8 migration ledger added with Foundation 001 C4: mechanism, first migration set, and the development database's not-yet-migrated state with the human step that closes it; §2 CI migration steps | Implementation agent |
+| 2026-09-20 | Development databases migrated to the head of the C4 set from the Replit workspace; §1.8 ledger record (hashes, times, catalog checksums, verification) replaces the not-yet-migrated state | Judson Malone (workspace); recorded by the implementation agent |
+| 2026-09-20 | §1.6 Node.js runtime as resolved by the `nodejs-24` module, the `engines.node` relaxation with its Governance §15 basis, and the workspace pull procedure; §5 source control record (branch protection, push authority, attribution, branch practice) | Values supplied by Judson Malone; recorded by the implementation agent |
