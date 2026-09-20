@@ -46,7 +46,7 @@ jobs:
         run: scripts/check-secret-patterns.sh "${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}"
 
   database:
-    name: provisioning dry run and database-backed tests (§6.5, §10 steps 3 and 5)
+    name: provisioning dry run, migrations, and database-backed tests (§6.5, §10 steps 3–5)
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -71,5 +71,13 @@ jobs:
             "SELECT environment FROM mesh_instance" | grep -qx ci
           psql "${PM_CI_ADMIN_URL%/postgres}/provider_mesh" -Atc \
             "SELECT count(*) FROM pg_roles WHERE rolname IN ('mesh_migrate','mesh_app','mesh_audit_writer','mesh_audit_reader') AND NOT rolbypassrls AND NOT rolsuper" | grep -qx 4
+      - name: Rehearse the pending migrations in a rollback transaction (§5.4, A04)
+        run: npm run db:rehearse
+      - name: Apply the migrations as mesh_migrate (§5.4, §10 step 4)
+        run: npm run db:migrate
+      - name: Ledger at head, zero pending, zero hash mismatches (A05)
+        run: npm run db:status
+      - name: Verify ledger hashes, catalog state, grants, roles, reference rows (A06)
+        run: npm run db:verify
       - name: Database-backed tests as the application roles (§10 step 5)
         run: npm run test:db

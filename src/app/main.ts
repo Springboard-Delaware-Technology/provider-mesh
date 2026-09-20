@@ -18,8 +18,9 @@ async function main(): Promise<void> {
 
   try {
     const report = await application.assertStartup();
+    const { domain, audit } = report.appliedMigrations;
     console.log(
-      `provider-mesh foundation: startup assertions passed; environment=${report.environment} migrations=${String(report.appliedMigrations)}`,
+      `provider-mesh foundation: startup assertions passed; environment=${report.environment} migrations=domain:${String(domain)},audit:${String(audit)}`,
     );
   } catch (error) {
     await application.stores.close();

@@ -7,10 +7,10 @@ import path from 'node:path';
 
 import type { ReadinessProbe, ReadinessResult } from '../modules/access-gateway/index.js';
 import {
-  loadCompiledMigrationSet,
+  loadCompiledMigrationSets,
   runStartupAssertions,
   StartupAssertionError,
-  type CompiledMigration,
+  type CompiledMigrationSets,
   type StartupReport,
 } from '../modules/platform-operations/index.js';
 import {
@@ -61,12 +61,13 @@ export function createStores(configs: StoreConfigs, observe?: StatementObserver)
   };
 }
 
-export const DEFAULT_MIGRATIONS_DIR = path.resolve(process.cwd(), 'db', 'migrations');
+/** Root of the migration sets: `<root>/domain` and `<root>/audit` (§5.4). */
+export const DEFAULT_MIGRATIONS_ROOT = path.resolve(process.cwd(), 'db', 'migrations');
 
 export interface Application {
   readonly instance: InstanceConfig;
   readonly stores: Stores;
-  readonly compiledMigrations: readonly CompiledMigration[];
+  readonly compiledMigrations: CompiledMigrationSets;
   /** Runs the §5.3 assertions once; throws `StartupAssertionError` with a code on failure. */
   assertStartup(): Promise<StartupReport>;
   /** Re-runs the same read-only assertions for `/readyz` (§5.10); never throws. */
@@ -75,12 +76,12 @@ export interface Application {
 
 export async function composeApplication(
   env: EnvSource,
-  options: { readonly migrationsDir?: string; readonly observe?: StatementObserver } = {},
+  options: { readonly migrationsRoot?: string; readonly observe?: StatementObserver } = {},
 ): Promise<Application> {
   const instance = instanceConfig(env);
   const configs = storeConfigs(env);
-  const compiledMigrations = await loadCompiledMigrationSet(
-    options.migrationsDir ?? DEFAULT_MIGRATIONS_DIR,
+  const compiledMigrations = await loadCompiledMigrationSets(
+    options.migrationsRoot ?? DEFAULT_MIGRATIONS_ROOT,
   );
   const stores = createStores(configs, options.observe);
 

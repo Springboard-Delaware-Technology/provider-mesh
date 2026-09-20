@@ -95,7 +95,15 @@ All held in Replit Secrets for the `provider-mesh` workspace. Values entered by 
 
 All five URLs carry `?sslmode=verify-full&sslrootcert=system` and the pooled endpoint host. Rotation: `console/C_rotate_passwords.sql` from `mesh_admin`; update all seven values afterwards.
 
-### 1.8 Neon features present and unused
+### 1.8 Migration ledger
+
+| Field | Value |
+|---|---|
+| Mechanism | `db/ledger` (Foundation 001 C4, §5.4): `db:migrate`, `db:status`, `db:rehearse`, `db:verify`, run as `mesh_migrate` through `PROVIDER_MESH_MIGRATE_URL` and `PROVIDER_MESH_AUDIT_MIGRATE_URL` from the Replit workspace; only `db:migrate` writes `migration_ledger` |
+| Development ledger state | **Not yet migrated.** The C4 branch was implemented and verified against a local and a CI database only; no agent session holds the development secrets. Before the application is started against this project, the decision authority (or a Replit session holding the secrets) runs `npm run db:rehearse && npm run db:migrate && npm run db:status && npm run db:verify` in the workspace and records the date and the `db:status` output here. Until then, startup and `/readyz` report `migration_ledger_mismatch` against this project, by design (§5.3 rule 4) |
+| First migration set | `db/migrations/domain/0001_migration_ledger.sql` and `db/migrations/audit/0001_migration_ledger.sql`: each verifies the four roles, the connect grants, and the single `mesh_instance` row for its database role, then creates `migration_ledger` with an immutability trigger and SELECT-only grants for the application identities |
+
+### 1.9 Neon features present and unused
 
 The project overview lists AI Gateway (shown "Enabled" by default), Data API, BetterAuth, Object storage, and Functions. None is configured or used. Foundation 001 excludes model processing (`SEC-AI-01`) and any exposure path other than the application; these remain unused until a bounded specification authorizes one. IP restrictions: none set. VPC: not configured.
 
@@ -107,6 +115,7 @@ The project overview lists AI Gateway (shown "Enabled" by default), Data API, Be
 | Database | Ephemeral PostgreSQL 18 container in GitHub Actions (`scripts/ci/start-postgres-tls.sh`); no persistent data; no secrets |
 | Transport | TLS, served with a certificate issued by a CA generated for that run; the application trusts it through `NODE_EXTRA_CA_CERTS`, which extends the runtime trust store and never disables verification, so CI exercises the same `sslmode=verify-full` path as development (Foundation 001 §5.3 rule 2, invariant 6) |
 | Provisioning | `scripts/provision/provision.sh --target container --environment ci` on every run through `scripts/ci/provision-and-export.sh`, creating both databases, the four roles with grants, and a marker with `environment = ci` |
+| Migrations | On every run, after provisioning and before `test:db`: `db:rehearse` (rollback), `db:migrate`, `db:status` (must report zero pending and zero mismatches), `db:verify` (§10 step 4; A04–A06), as `mesh_migrate` through the per-run `PROVIDER_MESH_MIGRATE_URL` and `PROVIDER_MESH_AUDIT_MIGRATE_URL` |
 | Instance ID and role passwords | Generated per run by the provisioning script, exported to the job environment under the same seven `PROVIDER_MESH_*` names the application reads, masked in the job log, and discarded with the runner; never recorded |
 
 ## 3. Development-tool profile (`SEC-D08`, Foundation 001 §8, §17 decision 3)
@@ -142,3 +151,4 @@ Neither condition widens the permitted material in Foundation 001 §8.
 | 2026-09-19 | Pending fields completed from the Neon console: §1.1 branch ID, §1.1 Postgres major version confirmed, §1.5 retention window | Values supplied by Judson Malone; recorded by the implementation agent |
 | 2026-09-19 | History window raised from 1 day to 7 days in the Neon console (Settings → Postgres → History window); §1.5 retention window updated | Judson Malone (console); recorded by the implementation agent |
 | 2026-09-19 | §2 CI environment: TLS container with a per-run CA and per-run role credentials, recorded with Foundation 001 C3 | Implementation agent |
+| 2026-09-20 | §1.8 migration ledger added with Foundation 001 C4: mechanism, first migration set, and the development database's not-yet-migrated state with the human step that closes it; §2 CI migration steps | Implementation agent |

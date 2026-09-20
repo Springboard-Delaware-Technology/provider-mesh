@@ -8,12 +8,18 @@
 
 - `instance-identity.ts` reads the provisioning-written `mesh_instance` marker and compares it
   with the expected instance, environment, and database role (§5.3 rules 3 and 6).
-- `migration-set.ts` lists the migrations compiled into the release with their SHA-256.
-- `migration-status.ts` reads the `migration_ledger` (created by C4) and compares it with the
-  compiled set; an absent ledger is consistent only with an empty compiled set.
-- `startup-assertions.ts` runs the above for the domain store, then pings and identity-checks
-  the audit store, all in `READ ONLY` transactions (§5.3 rule 5; §5.5 rule 5). Any failure
-  yields a reason code and no detail.
+- `migration-set.ts` lists the migrations compiled into the release with their SHA-256: one set
+  per database, `db/migrations/domain` and `db/migrations/audit` (§5.4: one ledger in each
+  database).
+- `migration-status.ts` reads a `migration_ledger` and compares it with its compiled set.
+  `compareLedger` yields the first difference for the startup assertion; `describeLedger` yields
+  the full listing (applied, pending, hash mismatches, unknown entries) for `db:status`. An
+  absent ledger is consistent only with an empty compiled set, so an unmigrated database fails
+  the assertion once a set exists.
+- `startup-assertions.ts` runs the above for the domain store, then for the audit store, all in
+  `READ ONLY` transactions (§5.3 rule 5; §5.5 rule 5). Any failure yields a reason code and no
+  detail.
 
-Human review queues are a later specification. The audit-store ledger check is wired when C4
-defines the audit migration set.
+The ledger is written only by the migration mechanism in `db/ledger` (C4, §5.4), which imports
+this module's set loader and comparison so that `db:status` and startup agree by construction.
+Human review queues are a later specification.

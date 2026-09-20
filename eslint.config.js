@@ -51,9 +51,9 @@ export default tseslint.config(
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
   {
-    // The composition root is the one place that may write to the process console
-    // until the structured logger (C8, §5.8) exists.
-    files: ['src/app/main.ts'],
+    // The composition root (until the structured logger of C8, §5.8 exists) and the migration
+    // command line (whose report is its output) are the only places that write to the console.
+    files: ['src/app/main.ts', 'db/ledger/cli.ts'],
     rules: { 'no-console': 'off' },
   },
   prettier,
