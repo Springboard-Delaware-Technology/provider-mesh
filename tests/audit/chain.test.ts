@@ -95,14 +95,17 @@ describe('the trigger-computed hash chain (§5.5 rule 1, A14)', () => {
     const firstHolds = new Promise<void>((resolve) => {
       releaseFirst = resolve;
     });
-    let firstHead: HeadRowText | null = null;
+    let lockTaken: (head: HeadRowText | null) => void = () => undefined;
+    const firstLocked = new Promise<HeadRowText | null>((resolve) => {
+      lockTaken = resolve;
+    });
     const first = rollbackOnly(writer, async (scope) => {
       await scope.query(forgedInsert(randomUUID(), 1, 'a'.repeat(64)));
-      firstHead = await head(scope);
+      // The insert returned, so the trigger holds the chain lock until this transaction ends.
+      lockTaken(await head(scope));
       await firstHolds;
     });
-    // Give the first transaction time to take the lock before the second tries.
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    const firstHead = await firstLocked;
     let secondDone = false;
     const second = rollbackOnly(writer2, async (scope) => {
       await scope.query(forgedInsert(randomUUID(), 1, 'b'.repeat(64)));
@@ -116,7 +119,7 @@ describe('the trigger-computed hash chain (§5.5 rule 1, A14)', () => {
     const secondHead = await second;
     expect(secondDone).toBe(true);
     // The first rolled back, so the second received the very position the first had taken.
-    expect(secondHead?.sequence).toBe((firstHead as HeadRowText | null)?.sequence);
+    expect(secondHead?.sequence).toBe(firstHead?.sequence);
   });
 
   it('links every row to its predecessor and hashes as the TypeScript canonicalization recomputes (rows never persist)', async () => {
