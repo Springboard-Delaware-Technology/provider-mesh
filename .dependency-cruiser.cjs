@@ -81,7 +81,8 @@ module.exports = {
   ],
   options: {
     doNotFollow: { path: 'node_modules' },
-    exclude: { path: ['^tests/boundary/fixtures/', '\\.md$'] },
+    // Replit-managed Agent skill templates are workspace-local, not dependency graph inputs.
+    exclude: { path: ['^\\.local/', '^tests/boundary/fixtures/', '\\.md$'] },
     tsPreCompilationDeps: true,
     // Absolute so the same rules apply when the test runs the check inside the fixture tree.
     tsConfig: { fileName: path.join(__dirname, 'tsconfig.json') },

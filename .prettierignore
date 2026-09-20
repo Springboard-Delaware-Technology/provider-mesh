@@ -1,4 +1,8 @@
 node_modules/
+# Replit-managed workspace metadata and Agent templates are not project formatting inputs.
+.cache/
+.upm/
+.local/
 dist/
 coverage/
 var/

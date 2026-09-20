@@ -5,7 +5,15 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'var/**', 'tests/boundary/fixtures/**'],
+    // Replit-managed Agent skill templates are workspace-local, not project source.
+    ignores: [
+      '.local/**',
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      'var/**',
+      'tests/boundary/fixtures/**',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
